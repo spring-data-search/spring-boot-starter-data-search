@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  io.commerce.spring.data.search.jpa.SearchConfiguration
