@@ -1,4 +1,4 @@
-package io.commerce.mongo.search;
+package io.commerce.spring.data.search.mongodb;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

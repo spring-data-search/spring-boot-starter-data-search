@@ -1,5 +1,9 @@
-package io.commerce.mongo.search;
+package io.commerce.spring.data.search.mongodb;
 
+import io.commerce.spring.data.search.LogicalOp;
+import io.commerce.spring.data.search.SearchBaseVisitor;
+import io.commerce.spring.data.search.SearchCriteria;
+import io.commerce.spring.data.search.SearchOp;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.BsonRegularExpression;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -24,7 +28,7 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
-public class SearchVisitorImpl extends io.commerce.mongo.search.SearchBaseVisitor<Criteria> {
+public class SearchVisitorImpl extends SearchBaseVisitor<Criteria> {
 
     private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
     private static final String KEY_PATTERN = "(!?)(.*)";
@@ -45,12 +49,12 @@ public class SearchVisitorImpl extends io.commerce.mongo.search.SearchBaseVisito
     }
 
     @Override
-    public Criteria visitInput(io.commerce.mongo.search.SearchParser.InputContext ctx) {
+    public Criteria visitInput(io.commerce.spring.data.search.SearchParser.InputContext ctx) {
         return super.visit(ctx != null ? ctx.search() : null);
     }
 
     @Override
-    public Criteria visitOpSearch(io.commerce.mongo.search.SearchParser.OpSearchContext ctx) {
+    public Criteria visitOpSearch(io.commerce.spring.data.search.SearchParser.OpSearchContext ctx) {
 
         List<Criteria> criteriaList = new ArrayList<>();
         var left = visit(ctx != null ? ctx.left : null);
@@ -76,17 +80,17 @@ public class SearchVisitorImpl extends io.commerce.mongo.search.SearchBaseVisito
     }
 
     @Override
-    public Criteria visitAtomSearch(io.commerce.mongo.search.SearchParser.AtomSearchContext ctx) {
+    public Criteria visitAtomSearch(io.commerce.spring.data.search.SearchParser.AtomSearchContext ctx) {
         return super.visit(ctx != null ? ctx.criteria() : null);
     }
 
     @Override
-    public Criteria visitPrioritySearch(io.commerce.mongo.search.SearchParser.PrioritySearchContext ctx) {
+    public Criteria visitPrioritySearch(io.commerce.spring.data.search.SearchParser.PrioritySearchContext ctx) {
         return super.visit(ctx != null ? ctx.search() : null);
     }
 
     @Override
-    public Criteria visitCriteria(io.commerce.mongo.search.SearchParser.CriteriaContext ctx) {
+    public Criteria visitCriteria(io.commerce.spring.data.search.SearchParser.CriteriaContext ctx) {
         String key = ctx.key().getText();
         String op = ctx.op() != null ? ctx.op().getText() : null;
         String value = ctx.value() != null

@@ -1,4 +1,4 @@
-package io.commerce.mongo.search;
+package io.commerce.spring.data.search;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

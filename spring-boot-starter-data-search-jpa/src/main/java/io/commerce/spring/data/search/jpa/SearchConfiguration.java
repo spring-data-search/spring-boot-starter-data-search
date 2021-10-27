@@ -1,4 +1,4 @@
-package io.commerce.mongo.search;
+package io.commerce.spring.data.search.jpa;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SearchConfiguration {
 
-    @Bean
-    public SearchCriteriaBuilder searchCriteriaBuilder() {
-        return new SearchCriteriaBuilder();
+    @Bean(name = "jpaSearchBuilder")
+    public SearchBuilder jpaSearchBuilder() {
+        return new SearchBuilder();
     }
 }

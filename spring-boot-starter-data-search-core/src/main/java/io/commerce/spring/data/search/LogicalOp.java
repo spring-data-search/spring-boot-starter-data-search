@@ -1,4 +1,4 @@
-package io.commerce.mongo.search;
+package io.commerce.spring.data.search;
 
 import org.apache.commons.lang3.StringUtils;
 

@@ -1,5 +1,6 @@
-package io.commerce.mongo.search;
+package io.commerce.spring.data.search.mongodb;
 
+import io.commerce.spring.data.search.SearchVisitor;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.commons.lang3.StringUtils;
@@ -11,21 +12,18 @@ import java.util.stream.Collectors;
 
 import static java.util.Arrays.stream;
 
-public class SearchCriteriaBuilder {
-
-    private final io.commerce.mongo.search.SearchVisitor<Criteria> searchVisitor;
-
-    public SearchCriteriaBuilder() {
-        this.searchVisitor = new SearchVisitorImpl();
-    }
+public class SearchBuilder {
 
     public Criteria parse(String search) {
         if (StringUtils.isBlank(search)) {
             return null;
         }
+
+        SearchVisitor<Criteria> searchVisitor = new SearchVisitorImpl();
         var parser = getParser(search);
         return searchVisitor.visit(parser.input());
     }
+
 
     public Criteria and(Criteria... criteria) {
         if (criteria == null) {
@@ -49,9 +47,9 @@ public class SearchCriteriaBuilder {
         return new Criteria().orOperator(criteriaList);
     }
 
-    private io.commerce.mongo.search.SearchParser getParser(String search) {
-        var lexer = new io.commerce.mongo.search.SearchLexer(CharStreams.fromString(search));
+    private io.commerce.spring.data.search.SearchParser getParser(String search) {
+        var lexer = new io.commerce.spring.data.search.SearchLexer(CharStreams.fromString(search));
         var tokens = new CommonTokenStream(lexer);
-        return new io.commerce.mongo.search.SearchParser(tokens);
+        return new io.commerce.spring.data.search.SearchParser(tokens);
     }
 }
