@@ -4,6 +4,11 @@ import io.commerce.spring.data.search.LogicalOp;
 import io.commerce.spring.data.search.SearchBaseVisitor;
 import io.commerce.spring.data.search.SearchCriteria;
 import io.commerce.spring.data.search.SearchOp;
+import io.commerce.spring.data.search.SearchParser.AtomSearchContext;
+import io.commerce.spring.data.search.SearchParser.CriteriaContext;
+import io.commerce.spring.data.search.SearchParser.InputContext;
+import io.commerce.spring.data.search.SearchParser.OpSearchContext;
+import io.commerce.spring.data.search.SearchParser.PrioritySearchContext;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.net.URLDecoder;
@@ -28,12 +33,12 @@ public class SearchVisitorImpl<T> extends SearchBaseVisitor<Specification<T>> {
     }
 
     @Override
-    public Specification<T> visitInput(io.commerce.spring.data.search.SearchParser.InputContext ctx) {
+    public Specification<T> visitInput(InputContext ctx) {
         return super.visit(ctx != null ? ctx.search() : null);
     }
 
     @Override
-    public Specification<T> visitOpSearch(io.commerce.spring.data.search.SearchParser.OpSearchContext ctx) {
+    public Specification<T> visitOpSearch(OpSearchContext ctx) {
 
         List<Specification<T>> specificationList = new ArrayList<>();
         var left = visit(ctx != null ? ctx.left : null);
@@ -66,17 +71,17 @@ public class SearchVisitorImpl<T> extends SearchBaseVisitor<Specification<T>> {
     }
 
     @Override
-    public Specification<T> visitAtomSearch(io.commerce.spring.data.search.SearchParser.AtomSearchContext ctx) {
+    public Specification<T> visitAtomSearch(AtomSearchContext ctx) {
         return super.visit(ctx != null ? ctx.criteria() : null);
     }
 
     @Override
-    public Specification<T> visitPrioritySearch(io.commerce.spring.data.search.SearchParser.PrioritySearchContext ctx) {
+    public Specification<T> visitPrioritySearch(PrioritySearchContext ctx) {
         return super.visit(ctx != null ? ctx.search() : null);
     }
 
     @Override
-    public Specification<T> visitCriteria(io.commerce.spring.data.search.SearchParser.CriteriaContext ctx) {
+    public Specification<T> visitCriteria(CriteriaContext ctx) {
         String key = ctx.key().getText();
         String op = ctx.op() != null ? ctx.op().getText() : null;
         String value = ctx.value() != null
@@ -102,6 +107,8 @@ public class SearchVisitorImpl<T> extends SearchBaseVisitor<Specification<T>> {
     }
 
     private Specification<T> buildSpecification(SearchCriteria searchCriteria) {
-        return SpecificationImpl.<T>builder().searchCriteria(searchCriteria).build();
+        return SpecificationImpl.<T>builder()
+                .searchCriteria(searchCriteria)
+                .build();
     }
 }

@@ -15,4 +15,6 @@ public interface SearchRepository<T, ID extends Serializable> extends MongoRepos
     Page<T> findAll(Query query, Pageable pageable);
 
     Page<T> findAll(Criteria criteria, Pageable pageable);
+
+    Page<T> findAll(String search, Pageable pageable);
 }

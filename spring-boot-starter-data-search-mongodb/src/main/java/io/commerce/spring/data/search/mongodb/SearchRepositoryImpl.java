@@ -1,5 +1,6 @@
 package io.commerce.spring.data.search.mongodb;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -14,14 +15,17 @@ import java.util.List;
 
 public class SearchRepositoryImpl<T, ID extends Serializable> extends SimpleMongoRepository<T, ID> implements SearchRepository<T, ID> {
 
+    private final SearchBuilder searchBuilder;
     private final MongoOperations mongoOperations;
     private final MongoEntityInformation<T, ID> entityInformation;
 
-    public SearchRepositoryImpl(final MongoEntityInformation<T, ID> entityInformation, final MongoOperations mongoOperations) {
+    public SearchRepositoryImpl(final MongoEntityInformation<T, ID> entityInformation,
+                                final MongoOperations mongoOperations) {
         super(entityInformation, mongoOperations);
 
         this.entityInformation = entityInformation;
         this.mongoOperations = mongoOperations;
+        this.searchBuilder = new SearchBuilder();
     }
 
     @Override
@@ -40,5 +44,14 @@ public class SearchRepositoryImpl<T, ID extends Serializable> extends SimpleMong
     public Page<T> findAll(final Criteria criteria, final Pageable pageable) {
         Query query = criteria != null ? Query.query(criteria) : null;
         return findAll(query, pageable);
+    }
+
+    @Override
+    public Page<T> findAll(String search, Pageable pageable) {
+        if (StringUtils.isBlank(search)) {
+            return findAll(pageable);
+        }
+        Criteria criteria = searchBuilder.parse(search);
+        return findAll(criteria, pageable);
     }
 }

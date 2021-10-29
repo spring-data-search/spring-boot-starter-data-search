@@ -1,5 +1,7 @@
 package io.commerce.spring.data.search.mongodb;
 
+import io.commerce.spring.data.search.SearchLexer;
+import io.commerce.spring.data.search.SearchParser;
 import io.commerce.spring.data.search.SearchVisitor;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -14,6 +16,12 @@ import static java.util.Arrays.stream;
 
 public class SearchBuilder {
 
+    /**
+     * Parse the search query.
+     *
+     * @param search A {@link String} query.
+     * @return A {@link Criteria} instance.
+     */
     public Criteria parse(String search) {
         if (StringUtils.isBlank(search)) {
             return null;
@@ -25,8 +33,14 @@ public class SearchBuilder {
     }
 
 
+    /**
+     * Combine an array of {@link Criteria} with and operator.
+     *
+     * @param criteria An array of {@link Criteria}.
+     * @return A {@link Criteria} instance.
+     */
     public Criteria and(Criteria... criteria) {
-        if (criteria == null) {
+        if (criteria == null || criteria.length == 0) {
             return null;
         }
         List<Criteria> criteriaList = stream(criteria)
@@ -36,8 +50,14 @@ public class SearchBuilder {
         return new Criteria().andOperator(criteriaList);
     }
 
+    /**
+     * Combine an array of {@link Criteria} with or operator.
+     *
+     * @param criteria An array of {@link Criteria}.
+     * @return A {@link Criteria} instance.
+     */
     public Criteria or(Criteria... criteria) {
-        if (criteria == null) {
+        if (criteria == null || criteria.length == 0) {
             return null;
         }
         List<Criteria> criteriaList = stream(criteria)
@@ -47,9 +67,9 @@ public class SearchBuilder {
         return new Criteria().orOperator(criteriaList);
     }
 
-    private io.commerce.spring.data.search.SearchParser getParser(String search) {
-        var lexer = new io.commerce.spring.data.search.SearchLexer(CharStreams.fromString(search));
+    private SearchParser getParser(String search) {
+        var lexer = new SearchLexer(CharStreams.fromString(search));
         var tokens = new CommonTokenStream(lexer);
-        return new io.commerce.spring.data.search.SearchParser(tokens);
+        return new SearchParser(tokens);
     }
 }

@@ -1,12 +1,14 @@
 package io.commerce.spring.data.search;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 @Getter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class SearchCriteria {
@@ -14,4 +16,88 @@ public class SearchCriteria {
     private String key;
     private SearchOp op;
     private String value;
+    private boolean isArray;
+    private Class<?> type;
+
+    public static SearchCriteriaBuilder builder() {
+        return new SearchCriteriaBuilder();
+    }
+
+    public static class SearchCriteriaBuilder {
+
+        private static final Pattern numberPattern;
+
+        static {
+            numberPattern = Pattern.compile("^(-?)(\\d+)([,.0-9]*)$");
+        }
+
+        private boolean exists;
+        private String key;
+        private SearchOp op;
+        private String value;
+
+        SearchCriteriaBuilder() {
+        }
+
+        public SearchCriteriaBuilder exists(boolean exists) {
+            this.exists = exists;
+            return this;
+        }
+
+        public SearchCriteriaBuilder key(String key) {
+            this.key = key;
+            return this;
+        }
+
+        public SearchCriteriaBuilder op(SearchOp op) {
+            this.op = op;
+            return this;
+        }
+
+        public SearchCriteriaBuilder value(String value) {
+            this.value = value;
+            return this;
+        }
+
+        public SearchCriteria build() {
+            boolean isArray = false;
+            Class<?> type = String.class;
+            if (value != null) {
+                value = StringUtils.trimToNull(value
+                        .replaceAll("^\"|\"$", "")  // replace " if it's not escaped
+                        .replaceAll("^'|'$", "") // replace ' if it's not escaped
+                        .replace("\\\"", "\"") // keep " if it's escaped
+                        .replace("\\'", "'")); // keep ' if it's escaped
+
+                String[] values = value.split("(?<!\\\\),");
+                isArray = values.length > 1;
+                if (isArray) {
+                    if (Stream.of(values).allMatch(this::isNumber)) {
+                        type = Number.class;
+                    } else if (Stream.of(values).allMatch(this::isBoolean)) {
+                        type = Boolean.class;
+                    }
+                } else {
+                    if (isNumber(value)) {
+                        type = Number.class;
+                    } else if (isBoolean(value)) {
+                        type = Boolean.class;
+                    }
+                }
+            }
+            return new SearchCriteria(exists, key, op, value, isArray, type);
+        }
+
+
+        private boolean isNumber(String value) {
+            if (value == null) {
+                return false;
+            }
+            return numberPattern.matcher(value).matches();
+        }
+
+        private boolean isBoolean(String value) {
+            return "true".equalsIgnoreCase(value) || "false".equalsIgnoreCase(value);
+        }
+    }
 }

@@ -46,9 +46,9 @@ public class SpecificationImpl<T> implements Specification<T> {
         Object value = parseValue(searchCriteria.getValue());
         switch (searchCriteria.getOp()) {
             case EQ:
-                return criteriaBuilder.equal(path.get(fieldName), value);
+                return eq(criteriaBuilder, path, fieldName, value);
             case NE:
-                return criteriaBuilder.notEqual(path.get(fieldName), value);
+                return neq(criteriaBuilder, path, fieldName, value);
             case GT:
                 return criteriaBuilder.greaterThan(path.get(fieldName), String.valueOf(value));
             case GE:
@@ -70,11 +70,27 @@ public class SpecificationImpl<T> implements Specification<T> {
         }
     }
 
+    private Predicate neq(CriteriaBuilder criteriaBuilder, Path<?> path, String fieldName, Object value) {
+        if (value instanceof List) {
+            return criteriaBuilder.not(criteriaBuilder.in(path.get(fieldName).in(((List<?>) value).toArray())));
+        } else {
+            return criteriaBuilder.notEqual(path.get(fieldName), value);
+        }
+    }
+
+    private Predicate eq(CriteriaBuilder criteriaBuilder, Path<?> path, String fieldName, Object value) {
+        if (value instanceof List) {
+            return criteriaBuilder.in(path.get(fieldName).in(((List<?>) value).toArray()));
+        } else {
+            return criteriaBuilder.equal(path.get(fieldName), value);
+        }
+    }
+
     private Path<?> getPath(Root<T> root, String key) {
         if (StringUtils.isBlank(key)) {
             return root;
         }
-        String[] keyArray = key.split("\\.");
+        String[] keyArray = StringUtils.split(key, ".");
         if (keyArray.length <= 1) {
             return root;
         }
@@ -87,21 +103,13 @@ public class SpecificationImpl<T> implements Specification<T> {
     }
 
     private String getFieldName(String key) {
-        List<String> keys = Arrays.asList(key.split("\\."));
+        List<String> keys = Arrays.asList(StringUtils.split(key, "."));
         return keys.get(keys.size() - 1);
-    }
-
-    private Predicate eq(String key, Object value, Path<?> path, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.equal(path.get(key), value);
-    }
-
-    private Predicate ne(String key, Object value, Path<?> path, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.notEqual(path.get(key), value);
     }
 
     private Object parseValue(String value) {
 
-        if (value == null || "null".equalsIgnoreCase(value)) {
+        if (value == null) {
             return null;
         }
 
