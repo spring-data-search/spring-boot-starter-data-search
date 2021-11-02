@@ -80,14 +80,12 @@ public class SearchVisitorImpl extends SearchBaseVisitor<Criteria> {
 
         SearchOp searchOp = SearchOp.searchOp(trimToEmpty(op));
         Matcher matcher = keyPattern.matcher(URLDecoder.decode(trimToNull(key), StandardCharsets.UTF_8));
-        if (matcher.matches()) {
-            return buildCriteria(SearchCriteria.builder()
-                    .exists(isEmpty(matcher.group(1)))
-                    .key(matcher.group(2))
-                    .op(searchOp)
-                    .value(value).build());
-        }
-        return null;
+        boolean matches = matcher.matches();
+        return buildCriteria(SearchCriteria.builder()
+                .exists(isEmpty(matcher.group(1)))
+                .key(matcher.group(2))
+                .op(searchOp)
+                .value(value).build());
     }
 
     private Criteria buildCriteria(SearchCriteria searchCriteria) {

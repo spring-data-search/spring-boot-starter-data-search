@@ -8,6 +8,8 @@ import org.bson.Document;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.mongodb.core.query.Criteria;
 
+import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -84,6 +86,31 @@ class CriteriaBuilderTest {
     }
 
     @Test
+    void toCriteria_eqDate() {
+        String key = "birthDate";
+        String value = "1984-11-27T05:36:32.00Z";
+        SearchCriteria searchCriteria = getSearchCriteria(key, value, SearchOp.EQ, false);
+        Criteria criteria = CriteriaBuilder.builder()
+                .searchCriteria(searchCriteria)
+                .build()
+                .toCriteria();
+
+        assertNotNull(criteria);
+
+        Document criteriaObject = criteria.getCriteriaObject();
+        assertNotNull(criteriaObject);
+
+        BasicDBList or = criteriaObject.get("$or", BasicDBList.class);
+        assertNotNull(or);
+        assertEquals(2, or.size());
+
+        Document stringDocument = (Document) or.get(0);
+        Document dateDocument = (Document) or.get(1);
+        assertEquals(value, stringDocument.getString(key));
+        assertEquals(getDateValue(value), dateDocument.get(key));
+    }
+
+    @Test
     void toCriteria_inString() {
         String key = "name";
         String value = "myName1,myName2,myNa\\,me3";
@@ -147,6 +174,30 @@ class CriteriaBuilderTest {
         Document booleanDocument = (Document) ((Document) basicDBList.get(1)).get(key);
         assertEquals(Stream.of(value.split("(?<!\\\\),")).collect(Collectors.toList()), stringDocument.get("$in"));
         assertEquals(Stream.of(value.split("(?<!\\\\),")).map(Boolean::valueOf).collect(Collectors.toList()), booleanDocument.get("$in"));
+    }
+
+    @Test
+    void toCriteria_inDate() {
+        String key = "birthDate";
+        String value = "1984-11-27T05:36:32Z,1981-12-24T09:31:00.000Z,1984-10-22T01:37:52.000+01:00,2000-10-01T01:37:52+01:00";
+        SearchCriteria searchCriteria = getSearchCriteria(key, value, SearchOp.EQ, false);
+        Criteria criteria = CriteriaBuilder.builder()
+                .searchCriteria(searchCriteria)
+                .build()
+                .toCriteria();
+
+        assertNotNull(criteria);
+
+        Document criteriaObject = criteria.getCriteriaObject();
+        assertNotNull(criteriaObject);
+
+        BasicDBList basicDBList = criteriaObject.get("$or", BasicDBList.class);
+        assertEquals(2, basicDBList.size());
+
+        Document stringDocument = (Document) ((Document) basicDBList.get(0)).get(key);
+        Document dateDocument = (Document) ((Document) basicDBList.get(1)).get(key);
+        assertEquals(Stream.of(value.split("(?<!\\\\),")).collect(Collectors.toList()), stringDocument.get("$in"));
+        assertEquals(Stream.of(value.split("(?<!\\\\),")).map(this::getDateValue).collect(Collectors.toList()), dateDocument.get("$in"));
     }
 
     @Test
@@ -217,6 +268,31 @@ class CriteriaBuilderTest {
     }
 
     @Test
+    void toCriteria_neDate() {
+        String key = "birthDate";
+        String value = "1984-11-27T05:36:32.00Z";
+        SearchCriteria searchCriteria = getSearchCriteria(key, value, SearchOp.NE, false);
+        Criteria criteria = CriteriaBuilder.builder()
+                .searchCriteria(searchCriteria)
+                .build()
+                .toCriteria();
+
+        assertNotNull(criteria);
+
+        Document criteriaObject = criteria.getCriteriaObject();
+        assertNotNull(criteriaObject);
+
+        BasicDBList or = criteriaObject.get("$or", BasicDBList.class);
+        assertNotNull(or);
+        assertEquals(2, or.size());
+
+        Document stringDocument = (Document) ((Document) or.get(0)).get(key);
+        Document dateDocument = (Document) ((Document) or.get(1)).get(key);
+        assertEquals(value, stringDocument.getString("$ne"));
+        assertEquals(getDateValue(value), dateDocument.get("$ne"));
+    }
+
+    @Test
     void toCriteria_ninString() {
         String key = "name";
         String value = "myName1,myName2,myNa\\,me3";
@@ -280,6 +356,30 @@ class CriteriaBuilderTest {
         Document booleanDocument = (Document) ((Document) basicDBList.get(1)).get(key);
         assertEquals(Stream.of(value.split("(?<!\\\\),")).collect(Collectors.toList()), stringDocument.get("$nin"));
         assertEquals(Stream.of(value.split("(?<!\\\\),")).map(Boolean::valueOf).collect(Collectors.toList()), booleanDocument.get("$nin"));
+    }
+
+    @Test
+    void toCriteria_ninDate() {
+        String key = "birthDate";
+        String value = "1984-11-27T05:36:32Z,1981-12-24T09:31:00.000Z,1984-10-22T01:37:52.000+01:00,2000-10-01T01:37:52+01:00";
+        SearchCriteria searchCriteria = getSearchCriteria(key, value, SearchOp.NE, false);
+        Criteria criteria = CriteriaBuilder.builder()
+                .searchCriteria(searchCriteria)
+                .build()
+                .toCriteria();
+
+        assertNotNull(criteria);
+
+        Document criteriaObject = criteria.getCriteriaObject();
+        assertNotNull(criteriaObject);
+
+        BasicDBList basicDBList = criteriaObject.get("$or", BasicDBList.class);
+        assertEquals(2, basicDBList.size());
+
+        Document stringDocument = (Document) ((Document) basicDBList.get(0)).get(key);
+        Document dateDocument = (Document) ((Document) basicDBList.get(1)).get(key);
+        assertEquals(Stream.of(value.split("(?<!\\\\),")).collect(Collectors.toList()), stringDocument.get("$nin"));
+        assertEquals(Stream.of(value.split("(?<!\\\\),")).map(this::getDateValue).collect(Collectors.toList()), dateDocument.get("$nin"));
     }
 
     @Test
@@ -349,6 +449,30 @@ class CriteriaBuilderTest {
     }
 
     @Test
+    void toCriteria_gtDate() {
+        String key = "birthDate";
+        String value = "1984-11-27T05:36:32.00Z";
+        SearchCriteria searchCriteria = getSearchCriteria(key, value, SearchOp.GT, false);
+        Criteria criteria = CriteriaBuilder.builder()
+                .searchCriteria(searchCriteria)
+                .build()
+                .toCriteria();
+
+        assertNotNull(criteria);
+
+        Document criteriaObject = criteria.getCriteriaObject();
+        assertNotNull(criteriaObject);
+
+        BasicDBList basicDBList = criteriaObject.get("$or", BasicDBList.class);
+        assertEquals(2, basicDBList.size());
+
+        Document stringDocument = (Document) ((Document) basicDBList.get(0)).get(key);
+        Document dateDocument = (Document) ((Document) basicDBList.get(1)).get(key);
+        assertEquals(value, stringDocument.getString("$gt"));
+        assertEquals(getDateValue(value), dateDocument.get("$gt"));
+    }
+
+    @Test
     void toCriteria_geString() {
         String key = "name";
         String value = "m";
@@ -412,6 +536,30 @@ class CriteriaBuilderTest {
         Document booleanDocument = (Document) ((Document) basicDBList.get(1)).get(key);
         assertEquals(value, stringDocument.getString("$gte"));
         assertEquals(Boolean.valueOf(value), booleanDocument.getBoolean("$gte"));
+    }
+
+    @Test
+    void toCriteria_geDate() {
+        String key = "birthDate";
+        String value = "1984-11-27T05:36:32.00Z";
+        SearchCriteria searchCriteria = getSearchCriteria(key, value, SearchOp.GE, false);
+        Criteria criteria = CriteriaBuilder.builder()
+                .searchCriteria(searchCriteria)
+                .build()
+                .toCriteria();
+
+        assertNotNull(criteria);
+
+        Document criteriaObject = criteria.getCriteriaObject();
+        assertNotNull(criteriaObject);
+
+        BasicDBList basicDBList = criteriaObject.get("$or", BasicDBList.class);
+        assertEquals(2, basicDBList.size());
+
+        Document stringDocument = (Document) ((Document) basicDBList.get(0)).get(key);
+        Document dateDocument = (Document) ((Document) basicDBList.get(1)).get(key);
+        assertEquals(value, stringDocument.getString("$gte"));
+        assertEquals(getDateValue(value), dateDocument.get("$gte"));
     }
 
     @Test
@@ -481,6 +629,30 @@ class CriteriaBuilderTest {
     }
 
     @Test
+    void toCriteria_ltDate() {
+        String key = "birthDate";
+        String value = "1984-11-27T05:36:32.00Z";
+        SearchCriteria searchCriteria = getSearchCriteria(key, value, SearchOp.LT, false);
+        Criteria criteria = CriteriaBuilder.builder()
+                .searchCriteria(searchCriteria)
+                .build()
+                .toCriteria();
+
+        assertNotNull(criteria);
+
+        Document criteriaObject = criteria.getCriteriaObject();
+        assertNotNull(criteriaObject);
+
+        BasicDBList basicDBList = criteriaObject.get("$or", BasicDBList.class);
+        assertEquals(2, basicDBList.size());
+
+        Document stringDocument = (Document) ((Document) basicDBList.get(0)).get(key);
+        Document dateDocument = (Document) ((Document) basicDBList.get(1)).get(key);
+        assertEquals(value, stringDocument.getString("$lt"));
+        assertEquals(getDateValue(value), dateDocument.get("$lt"));
+    }
+
+    @Test
     void toCriteria_leString() {
         String key = "name";
         String value = "m";
@@ -544,6 +716,30 @@ class CriteriaBuilderTest {
         Document booleanDocument = (Document) ((Document) basicDBList.get(1)).get(key);
         assertEquals(value, stringDocument.getString("$lte"));
         assertEquals(Boolean.valueOf(value), booleanDocument.getBoolean("$lte"));
+    }
+
+    @Test
+    void toCriteria_leDate() {
+        String key = "birthDate";
+        String value = "1984-11-27T05:36:32.00Z";
+        SearchCriteria searchCriteria = getSearchCriteria(key, value, SearchOp.LE, false);
+        Criteria criteria = CriteriaBuilder.builder()
+                .searchCriteria(searchCriteria)
+                .build()
+                .toCriteria();
+
+        assertNotNull(criteria);
+
+        Document criteriaObject = criteria.getCriteriaObject();
+        assertNotNull(criteriaObject);
+
+        BasicDBList basicDBList = criteriaObject.get("$or", BasicDBList.class);
+        assertEquals(2, basicDBList.size());
+
+        Document stringDocument = (Document) ((Document) basicDBList.get(0)).get(key);
+        Document dateDocument = (Document) ((Document) basicDBList.get(1)).get(key);
+        assertEquals(value, stringDocument.getString("$lte"));
+        assertEquals(getDateValue(value), dateDocument.get("$lte"));
     }
 
     @Test
@@ -661,6 +857,14 @@ class CriteriaBuilderTest {
                 .op(eq)
                 .exists(exists)
                 .build();
+    }
+
+    private Instant getDateValue(String value) {
+        try {
+            return OffsetDateTime.parse(value).toInstant();
+        } catch (Exception ignored) {
+            return null;
+        }
     }
 
     private String cleanValue(String value) {
