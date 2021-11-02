@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
+import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -25,10 +27,13 @@ public class SearchCriteria {
 
     public static class SearchCriteriaBuilder {
 
-        private static final Pattern numberPattern;
+        private static final Pattern NUMBER_PATTERN;
+        private static final Pattern BOOLEAN_PATTERN;
+        public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 
         static {
-            numberPattern = Pattern.compile("^(-?)(\\d+)([,.0-9]*)$");
+            NUMBER_PATTERN = Pattern.compile("^(-?)(\\d+)([,.0-9]*)$");
+            BOOLEAN_PATTERN = Pattern.compile("^(false|true)$", Pattern.CASE_INSENSITIVE);
         }
 
         private boolean exists;
@@ -76,12 +81,16 @@ public class SearchCriteria {
                         type = Number.class;
                     } else if (Stream.of(values).allMatch(this::isBoolean)) {
                         type = Boolean.class;
+                    } else if (Stream.of(values).allMatch(this::isDate)) {
+                        type = Instant.class;
                     }
                 } else {
                     if (isNumber(value)) {
                         type = Number.class;
                     } else if (isBoolean(value)) {
                         type = Boolean.class;
+                    } else if (isDate(value)) {
+                        type = Instant.class;
                     }
                 }
             }
@@ -93,11 +102,26 @@ public class SearchCriteria {
             if (value == null) {
                 return false;
             }
-            return numberPattern.matcher(value).matches();
+            return NUMBER_PATTERN.matcher(value).matches();
         }
 
         private boolean isBoolean(String value) {
-            return "true".equalsIgnoreCase(value) || "false".equalsIgnoreCase(value);
+            if (value == null) {
+                return false;
+            }
+            return BOOLEAN_PATTERN.matcher(value).matches();
+        }
+
+        private boolean isDate(String value) {
+            if (value == null) {
+                return false;
+            }
+            try {
+                OffsetDateTime.parse(value).toInstant();
+            } catch (Exception ignored) {
+                return false;
+            }
+            return true;
         }
     }
 }
