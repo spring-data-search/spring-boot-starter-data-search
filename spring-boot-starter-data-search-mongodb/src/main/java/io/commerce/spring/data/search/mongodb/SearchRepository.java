@@ -10,7 +10,7 @@ import org.springframework.data.repository.NoRepositoryBean;
 import java.io.Serializable;
 
 @NoRepositoryBean
-public interface SearchRepository<T, ID extends Serializable> extends MongoRepository<T, ID> {
+public interface SearchRepository<T, I extends Serializable> extends MongoRepository<T, I> {
 
     Page<T> findAll(Query query, Pageable pageable);
 

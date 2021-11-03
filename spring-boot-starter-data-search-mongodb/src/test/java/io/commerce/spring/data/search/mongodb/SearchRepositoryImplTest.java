@@ -30,6 +30,7 @@ class SearchRepositoryImplTest {
         String search = "<";
         Criteria criteria = new SearchBuilder().parse(search);
         searchRepository.findAll(search, Pageable.unpaged());
+        verify(mongoOperations).find(any(), any(), any());
     }
 
     @Test
@@ -37,6 +38,7 @@ class SearchRepositoryImplTest {
         String search = "";
         Criteria criteria = new SearchBuilder().parse(search);
         searchRepository.findAll(search, Pageable.unpaged());
+        verify(mongoOperations).find(any(), any(), any());
     }
 
     @Test
