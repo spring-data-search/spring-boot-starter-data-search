@@ -35,8 +35,11 @@
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
 
-        <sonar.organization>commerce-io</sonar.organization>
-        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.coverage.jacoco.xmlReportPaths>
+            ${project.basedir}/spring-boot-starter-data-search-core/target/site/jacoco-aggregate/jacoco.xml,
+            ${project.basedir}/spring-boot-starter-data-search-mongodb/target/site/jacoco-aggregate/jacoco.xml,
+            ${project.basedir}/spring-boot-starter-data-search-jpa/target/site/jacoco-aggregate/jacoco.xml
+        </sonar.coverage.jacoco.xmlReportPaths>
     </properties>
 
     <modules>
@@ -76,6 +79,13 @@
                                 <goals>
                                     <goal>report</goal>
                                 </goals>
+                            </execution>
+                            <execution>
+                                <id>report</id>
+                                <goals>
+                                    <goal>report-aggregate</goal>
+                                </goals>
+                                <phase>verify</phase>
                             </execution>
                         </executions>
                     </plugin>
