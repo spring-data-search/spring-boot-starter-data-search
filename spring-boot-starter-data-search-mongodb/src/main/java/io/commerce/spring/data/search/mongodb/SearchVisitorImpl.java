@@ -50,7 +50,10 @@ public class SearchVisitorImpl extends SearchBaseVisitor<Criteria> {
             criteriaList.add(right);
         }
 
-        String logicalOp = ctx != null ? (ctx.logicalOp != null ? ctx.logicalOp.getText() : null) : null;
+        String logicalOp = null;
+        if (ctx != null) {
+            logicalOp = ctx.logicalOp != null ? ctx.logicalOp.getText() : null;
+        }
 
         switch (LogicalOp.logicalOp(logicalOp)) {
             case OR:
@@ -82,10 +85,11 @@ public class SearchVisitorImpl extends SearchBaseVisitor<Criteria> {
         Matcher matcher = keyPattern.matcher(URLDecoder.decode(trimToNull(key), StandardCharsets.UTF_8));
         boolean matches = matcher.matches();
         return buildCriteria(SearchCriteria.builder()
-                .exists(isEmpty(matcher.group(1)))
-                .key(matcher.group(2))
+                .exists(matches && isEmpty(matcher.group(1)))
+                .key(matches ? matcher.group(2) : null)
                 .op(searchOp)
-                .value(value).build());
+                .value(value)
+                .build());
     }
 
     private Criteria buildCriteria(SearchCriteria searchCriteria) {

@@ -13,13 +13,13 @@ import org.springframework.data.mongodb.repository.support.SimpleMongoRepository
 import java.io.Serializable;
 import java.util.List;
 
-public class SearchRepositoryImpl<T, ID extends Serializable> extends SimpleMongoRepository<T, ID> implements SearchRepository<T, ID> {
+public class SearchRepositoryImpl<T, I extends Serializable> extends SimpleMongoRepository<T, I> implements SearchRepository<T, I> {
 
     private final SearchBuilder searchBuilder;
     private final MongoOperations mongoOperations;
-    private final MongoEntityInformation<T, ID> entityInformation;
+    private final MongoEntityInformation<T, I> entityInformation;
 
-    public SearchRepositoryImpl(final MongoEntityInformation<T, ID> entityInformation,
+    public SearchRepositoryImpl(final MongoEntityInformation<T, I> entityInformation,
                                 final MongoOperations mongoOperations) {
         super(entityInformation, mongoOperations);
 
