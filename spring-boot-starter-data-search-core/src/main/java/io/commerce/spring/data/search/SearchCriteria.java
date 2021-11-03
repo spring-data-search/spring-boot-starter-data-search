@@ -69,8 +69,7 @@ public class SearchCriteria {
             Class<?> type = String.class;
             if (value != null) {
                 value = StringUtils.trimToNull(value
-                        .replaceAll("^\"|\"$", "")  // replace " if it's not escaped
-                        .replaceAll("^'|'$", "") // replace ' if it's not escaped
+                        .replaceAll("^\"|^'|\"$|'$", "")  // replace " or ' if it's not escaped
                         .replace("\\\"", "\"") // keep " if it's escaped
                         .replace("\\'", "'")); // keep ' if it's escaped
 
@@ -117,11 +116,11 @@ public class SearchCriteria {
                 return false;
             }
             try {
-                OffsetDateTime.parse(value).toInstant();
+                Instant instant = OffsetDateTime.parse(value).toInstant();
+                return instant != null;
             } catch (Exception ignored) {
                 return false;
             }
-            return true;
         }
     }
 }
