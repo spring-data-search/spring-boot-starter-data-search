@@ -35,6 +35,7 @@
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
 
+        <maven.deploy.skip>true</maven.deploy.skip>
         <sonar.coverage.jacoco.xmlReportPaths>
             ${project.basedir}/spring-boot-starter-data-search-core/target/site/jacoco-aggregate/jacoco.xml,
             ${project.basedir}/spring-boot-starter-data-search-mongodb/target/site/jacoco-aggregate/jacoco.xml,
@@ -42,10 +43,18 @@
         </sonar.coverage.jacoco.xmlReportPaths>
     </properties>
 
+    <distributionManagement>
+        <snapshotRepository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/commerce-io/spring-boot-starter-data-search</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <modules>
         <module>spring-boot-starter-data-search-core</module>
-        <module>spring-boot-starter-data-search-jpa</module>
         <module>spring-boot-starter-data-search-mongodb</module>
+        <module>spring-boot-starter-data-search-jpa</module>
     </modules>
 
     <build>

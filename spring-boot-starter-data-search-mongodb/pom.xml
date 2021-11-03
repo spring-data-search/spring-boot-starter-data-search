@@ -12,6 +12,10 @@
     <artifactId>spring-boot-starter-data-search-mongodb</artifactId>
     <packaging>jar</packaging>
 
+    <properties>
+        <maven.deploy.skip>false</maven.deploy.skip>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
