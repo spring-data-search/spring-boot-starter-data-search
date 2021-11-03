@@ -87,8 +87,7 @@ public class SearchVisitorImpl<T> extends SearchBaseVisitor<Specification<T>> {
         String value = ctx.value() != null
                 ?
                 trimToNull(ctx.value().getText()
-                        .replaceAll("^\"|\"$", "")  // replace " if it's mot escaped
-                        .replaceAll("^'|'$", "") // replace ' if it's not escaped
+                        .replaceAll("^\"|^'|\"$|'$", "")  // replace " or ' if it's not escaped
                         .replace("\\\"", "\"") // keep " if it's escaped
                         .replace("\\'", "'")) // keep ' if it's escaped
                 :

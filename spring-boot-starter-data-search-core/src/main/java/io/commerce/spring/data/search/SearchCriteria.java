@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.regex.Pattern;
@@ -27,12 +29,9 @@ public class SearchCriteria {
 
     public static class SearchCriteriaBuilder {
 
-        private static final Pattern NUMBER_PATTERN;
         private static final Pattern BOOLEAN_PATTERN;
-        public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 
         static {
-            NUMBER_PATTERN = Pattern.compile("^(-?)(\\d+)([,.0-9]*)$");
             BOOLEAN_PATTERN = Pattern.compile("^(false|true)$", Pattern.CASE_INSENSITIVE);
         }
 
@@ -69,28 +68,27 @@ public class SearchCriteria {
             Class<?> type = String.class;
             if (value != null) {
                 value = StringUtils.trimToNull(value
-                        .replaceAll("^\"|\"$", "")  // replace " if it's not escaped
-                        .replaceAll("^'|'$", "") // replace ' if it's not escaped
+                        .replaceAll("^\"|^'|\"$|'$", "")  // replace " or ' if it's not escaped
                         .replace("\\\"", "\"") // keep " if it's escaped
                         .replace("\\'", "'")); // keep ' if it's escaped
 
                 String[] values = value.split("(?<!\\\\),");
                 isArray = values.length > 1;
                 if (isArray) {
-                    if (Stream.of(values).allMatch(this::isNumber)) {
-                        type = Number.class;
+                    if (Stream.of(values).allMatch(this::isDate)) {
+                        type = Instant.class;
                     } else if (Stream.of(values).allMatch(this::isBoolean)) {
                         type = Boolean.class;
-                    } else if (Stream.of(values).allMatch(this::isDate)) {
-                        type = Instant.class;
+                    } else if (Stream.of(values).allMatch(this::isNumber)) {
+                        type = Number.class;
                     }
                 } else {
-                    if (isNumber(value)) {
-                        type = Number.class;
+                    if (isDate(value)) {
+                        type = Instant.class;
                     } else if (isBoolean(value)) {
                         type = Boolean.class;
-                    } else if (isDate(value)) {
-                        type = Instant.class;
+                    } else if (isNumber(value)) {
+                        type = Number.class;
                     }
                 }
             }
@@ -102,7 +100,12 @@ public class SearchCriteria {
             if (value == null) {
                 return false;
             }
-            return NUMBER_PATTERN.matcher(value).matches();
+            try {
+                Number number = NumberFormat.getInstance().parse(value);
+                return number != null;
+            } catch (ParseException ignored) {
+                return false;
+            }
         }
 
         private boolean isBoolean(String value) {
@@ -117,11 +120,11 @@ public class SearchCriteria {
                 return false;
             }
             try {
-                OffsetDateTime.parse(value).toInstant();
+                Instant instant = OffsetDateTime.parse(value).toInstant();
+                return instant != null;
             } catch (Exception ignored) {
                 return false;
             }
-            return true;
         }
     }
 }

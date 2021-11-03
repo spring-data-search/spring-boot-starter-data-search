@@ -20,7 +20,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -29,13 +28,6 @@ import java.util.stream.Stream;
 public class SpecificationImpl<T> implements Specification<T> {
 
     private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
-    private static final String NUMBER_PATTERN = "^(-?)(\\d+)([,.0-9]*)$";
-
-    private static final Pattern numberPattern;
-
-    static {
-        numberPattern = Pattern.compile(NUMBER_PATTERN);
-    }
 
     private final SearchCriteria searchCriteria;
 
@@ -130,9 +122,7 @@ public class SpecificationImpl<T> implements Specification<T> {
         }
 
         try {
-            if (numberPattern.matcher(value).matches()) {
-                return NumberFormat.getInstance().parse(value);
-            }
+            return NumberFormat.getInstance().parse(value);
         } catch (ParseException ignored) {
         }
 
