@@ -11,7 +11,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>io.commerce</groupId>
+    <groupId>app.commerce-io</groupId>
     <artifactId>spring-boot-starter-data-search</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
