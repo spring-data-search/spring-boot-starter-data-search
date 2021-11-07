@@ -9,7 +9,9 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -415,7 +417,11 @@ public class CriteriaBuilder {
     }
 
     private Instant getDateValue(String value) {
-        return OffsetDateTime.parse(value).toInstant();
+        try {
+            return OffsetDateTime.parse(value).toInstant();
+        } catch (Exception ignored) {
+        }
+        return LocalDate.parse(value).atStartOfDay().atOffset(ZoneOffset.UTC).toInstant();
     }
 
     private Object getValue(String value) {
