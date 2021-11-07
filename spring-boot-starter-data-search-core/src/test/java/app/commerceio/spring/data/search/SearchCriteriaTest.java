@@ -133,7 +133,7 @@ class SearchCriteriaTest {
     @Test
     void searchCriteriaDateArray() {
         String key = "key";
-        String value = "1986-11-27T05:36:32.00Z,1984-11-27T05:36:32.00Z";
+        String value = "1986-11-27T05:36:32.00Z,1984-11-27T05:36:32.00Z,1988-01-02";
 
         SearchCriteria searchCriteria = SearchCriteria.builder()
                 .key(key)

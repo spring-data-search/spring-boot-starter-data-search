@@ -8,7 +8,9 @@ import org.apache.commons.lang3.StringUtils;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -122,9 +124,15 @@ public class SearchCriteria {
             try {
                 Instant instant = OffsetDateTime.parse(value).toInstant();
                 return instant != null;
-            } catch (Exception ignored) {
-                return false;
+            } catch (Exception retry) {
+                try {
+                    Instant instant = LocalDate.parse(value).atStartOfDay().atOffset(ZoneOffset.UTC).toInstant();
+                    return instant != null;
+                } catch (Exception ignored) {
+                    return false;
+                }
             }
+
         }
     }
 }

@@ -10,7 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.data.mongodb.core.query.Criteria;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -180,7 +182,7 @@ class CriteriaBuilderTest {
     @Test
     void toCriteria_inDate() {
         String key = "birthDate";
-        String value = "1984-11-27T05:36:32Z,1981-12-24T09:31:00.000Z,1984-10-22T01:37:52.000+01:00,2000-10-01T01:37:52+01:00";
+        String value = "1984-11-27T05:36:32Z,1981-12-24T09:31:00.000Z,1984-10-22T01:37:52.000+01:00,2000-10-01";
         SearchCriteria searchCriteria = getSearchCriteria(key, value, SearchOp.EQ, false);
         Criteria criteria = CriteriaBuilder.builder()
                 .searchCriteria(searchCriteria)
@@ -864,8 +866,8 @@ class CriteriaBuilderTest {
         try {
             return OffsetDateTime.parse(value).toInstant();
         } catch (Exception ignored) {
-            return null;
         }
+        return LocalDate.parse(value).atStartOfDay().atOffset(ZoneOffset.UTC).toInstant();
     }
 
     private String cleanValue(String value) {
