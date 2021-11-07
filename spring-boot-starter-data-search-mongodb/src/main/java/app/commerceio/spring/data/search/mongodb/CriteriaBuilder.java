@@ -420,8 +420,8 @@ public class CriteriaBuilder {
         try {
             return OffsetDateTime.parse(value).toInstant();
         } catch (Exception ignored) {
+            return LocalDate.parse(value).atStartOfDay().atOffset(ZoneOffset.UTC).toInstant();
         }
-        return LocalDate.parse(value).atStartOfDay().atOffset(ZoneOffset.UTC).toInstant();
     }
 
     private Object getValue(String value) {

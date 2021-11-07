@@ -124,15 +124,15 @@ public class SearchCriteria {
             try {
                 Instant instant = OffsetDateTime.parse(value).toInstant();
                 return instant != null;
-            } catch (Exception ignored) {
+            } catch (Exception retry) {
+                try {
+                    Instant instant = LocalDate.parse(value).atStartOfDay().atOffset(ZoneOffset.UTC).toInstant();
+                    return instant != null;
+                } catch (Exception ignored) {
+                    return false;
+                }
             }
 
-            try {
-                Instant instant = LocalDate.parse(value).atStartOfDay().atOffset(ZoneOffset.UTC).toInstant();
-                return instant != null;
-            } catch (Exception ignored) {
-            }
-            return false;
         }
     }
 }
