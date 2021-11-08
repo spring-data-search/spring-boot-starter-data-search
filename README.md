@@ -15,3 +15,125 @@
     Spring-Data search API augmented with Natural Language support.
   </p>
 </p>
+
+## Made for complexe search
+If you need a complexe/ complete filter to access your data, based on multiple criteria, and you don't want to implement a dedicated query for each combination, then this is made for you.
+
+## How it simplifies your search API? 
+data-search provides a custom repository, to perform advanced search with Natural Language queries.  
+
+**Interface**
+```java
+Page<T> findAll(String search, Pageable pageable);
+```
+
+**Example**
+```java
+String search = "birthDate >: 1988-01-01 and (emailAddress : '/.*gmail.com/' or emailAddress: '/.*protonmail.com/') and emailAddressVerified: true and addresses.countryCode: FR,CH,CN";
+Page<Customer> customers = customerRepository.findAll(search, Pageable.unpaged());
+```
+
+## How it works
+data-search uses [ANTLR](https://www.antlr.org/) to build and parse the search grammar.
+
+**Operators**
+| Operator | Description |Example|
+| --- | --- | --- |
+| : | equal | emailAddressVerified : true |
+| : | in | countryCode : FR,CH,CN |
+| !: | not equal | emailAddressVerified !: true |
+| !: | not in | countryCode !: FR,CH,CN |
+| < | less than | birthDate< 1988-01-01 |
+| <: | less than or equal | birthDate <: 1988-01-01 |
+| > | greater than | birthDate > 1988-01-01 |
+| >: | greater than or equal | birthDate >: 1988-01-01 |
+|  | exists (is not null) | birthDate |
+| ! | doesn't exist (is null) | !birthDate |
+
+**Supported values**
+| Format | Description |Example|
+| --- | --- | --- |
+| String | Strings must be between " or ' if the valeu contains one of the operator or logical operators | firstName : Stan |
+| Boolean | True or False | emailAddressVerified : true |
+| Number | Any type of numeric value | ref >: 100 or coins > 6.76453 |
+| Date | Date without time | birthDate >: 1988-01-01 |
+| Datetime | Date with time and optional offset (UTC if not precised). Datetime values must be put between " or ' and the + url-encoded | createdDate >: 2021-08-23T18:58:24Z and createdDate <: 2021-10-12T18:58:24.000+02:00 |
+| Array | Comma separated values (Comma must be escaped (\,) if it's aimed to be used as part of the value)  | countryCode : FR,CH,CN |
+| RegEx | Only for mongodb | emailAddress : '/.*gmail.com/' |
+
+
+## Getting Started
+**Supports Java 11 or higher**  
+
+### Use with mongodb
+
+#### Installation
+**Maven**
+
+```xml
+<dependency>
+    <groupId>app.commerce-io</groupId>
+    <artifactId>spring-boot-starter-data-search-mongodb</artifactId>
+    <version>0.0.1</version>
+</dependency>
+```
+
+**Gradle**
+
+`implementation 'app.commerce-io:spring-boot-starter-data-search-mongodb:0.0.1'`
+
+#### Usage
+
+**Enable SearchRepositoryImpl**
+
+In order to use the provided repository, please add the following annotation to the main class or any other configuration class.
+
+```java
+@Configuration
+@EnableMongoRepositories(repositoryBaseClass = SearchRepositoryImpl.class)
+public class DemoConfiguration {
+
+}
+```
+
+**Extend SearchRepository**
+
+Make your repositories extend `SearchRepository`
+
+```java
+@Repository
+public interface CustomerRepository extends SearchRepository<CustomerDocument, String> {
+}
+```
+
+**Use in a controller or from anywhere**
+
+```java
+@RestController
+@RequiredArgsConstructor
+public class DemoController {
+
+    private final CustomerRepository customerRepository;
+
+    @Transactional(readOnly = true)
+    @RequestMapping(
+            method = RequestMethod.GET,
+            value = "/customers",
+            produces = {"application/json"}
+    )
+    public ResponseEntity<Page<CustomerDocument>> searchCustomers(
+            @RequestParam(value = "search", required = false) String search,
+            Pageable pageable) {
+
+        Page<CustomerDocument> customerDocumentPage = customerRepository.findAll(
+                search,
+                pageable);
+
+        return ok(customerDocumentPage);
+    }
+}
+```
+
+### Use with jpa
+
+jpa support will be released in the next version
