@@ -67,8 +67,11 @@ data-search uses [ANTLR](https://www.antlr.org/) to build and parse the search g
 
 ### Use with mongodb
 
+#### Demo 
+https://github.com/commerce-io/spring-boot-starter-data-search-demo
+
 #### Installation
-**Maven**
+##### Maven
 
 ```xml
 <dependency>
@@ -78,13 +81,11 @@ data-search uses [ANTLR](https://www.antlr.org/) to build and parse the search g
 </dependency>
 ```
 
-**Gradle**
+##### Gradle
 
 `implementation 'app.commerce-io:spring-boot-starter-data-search-mongodb:0.0.1'`
 
 #### Usage
-
-**Enable SearchRepositoryImpl**
 
 In order to use the provided repository, please add the following annotation to the main class or any other configuration class.
 
@@ -96,8 +97,6 @@ public class DemoConfiguration {
 }
 ```
 
-**Extend SearchRepository**
-
 Make your repositories extend `SearchRepository`
 
 ```java
@@ -106,7 +105,7 @@ public interface CustomerRepository extends SearchRepository<CustomerDocument, S
 }
 ```
 
-**Use in a controller or from anywhere**
+And use in a controller or from anywhere else
 
 ```java
 @RestController
