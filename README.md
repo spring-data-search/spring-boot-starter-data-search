@@ -73,24 +73,22 @@ data-search uses [ANTLR](https://www.antlr.org/) to build and parse the search g
 | Boolean | True or False | emailAddressVerified : true |
 | Number | Any type of numeric value | ref >: 100 or coins > 6.76453 |
 | Date | Date without time | birthDate >: 1988-01-01 |
-| Datetime | Date with time and optional offset (UTC if not precised). Datetime values must be put between " or ' and the + url-encoded | createdDate >: 2021-08-23T18:58:24Z and createdDate <: 2021-10-12T18:58:24.000+02:00 |
+| Datetime | Date with time and optional offset (UTC if not specified). Datetime values must be put between " or ' and the + url-encoded | createdDate >: 2021-08-23T18:58:24Z and createdDate <: 2021-10-12T18:58:24.000+02:00 |
 | Array | Comma separated values (Comma must be escaped (\,) if it's aimed to be used as part of the value)  | countryCode : FR,CH,CN |
 | RegEx | Regular expression, supported only for mongodb ([see documentation](https://docs.mongodb.com/manual/reference/operator/query/regex/)) | emailAddress : '/.*gmail.com/' |
 
 
 ## Getting Started
-**Supports Java 11 or higher**
 
-If Java 8 support is needed, please vote for [this issue](https://github.com/commerce-io/spring-boot-starter-data-search/issues/3)
+### Requirements
+**Java version** 11 or higher (_If java 8 support is needed, please vote for [this issue](https://github.com/commerce-io/spring-boot-starter-data-search/issues/3)_)
 
-**Supports SpringBoot 2.5.0 or higher**
-
-Previous version will be supported in the coming versions 
+**SpringBoot version** 2.1.0 or higher
 
 ### Use with mongodb
 
 #### Demo
-https://github.com/commerce-io/spring-boot-starter-data-search-demo
+https://github.com/commerce-io/spring-boot-starter-data-search-mongodb-demo
 
 #### Installation
 ##### Maven
@@ -99,7 +97,7 @@ https://github.com/commerce-io/spring-boot-starter-data-search-demo
 <dependency>
     <groupId>app.commerce-io</groupId>
     <artifactId>spring-boot-starter-data-search-mongodb</artifactId>
-    <version>0.0.1</version>
+    <version>1.0.0</version>
 </dependency>
 ```
 
