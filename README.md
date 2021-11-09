@@ -63,7 +63,10 @@ data-search uses [ANTLR](https://www.antlr.org/) to build and parse the search g
 
 
 ## Getting Started
-**Supports Java 11 or higher**  
+**Supports Java 11 or higher**
+
+If Java 8 support is needed, please vote for [this issue](https://github.com/commerce-io/spring-boot-starter-data-search/issues/3)
+
 
 ### Use with mongodb
 
