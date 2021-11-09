@@ -1,0 +1,63 @@
+name: release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release-version:
+        description: 'Release version'
+        required: true
+      prerelease:
+        description: 'Is it a pre-release?'
+        required: true
+        default: false
+
+jobs:
+  release:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: echo "Release the version ${{ github.event.inputs.release-version }}"
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu'
+          java-version: 11
+          server-id: ossrh
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_PASSWORD
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
+
+      - run: mvn versions:set -DnewVersion=${{ github.event.inputs.release-version }} -DgenerateBackupPoms=false --no-transfer-progress
+
+      - run: mvn -B clean deploy -P deploy --no-transfer-progress -DskipTests
+        env:
+          MAVEN_USERNAME: ${{ secrets.OSSRH_USER }}
+          MAVEN_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+      - uses: actions/create-release@v1
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.event.inputs.release-version }}
+          release_name: v${{ github.event.inputs.release-version }}
+          body: |
+            #### Installation
+            ##### Maven
+            ```xml
+            <dependency>
+            <groupId>app.commerce-io</groupId>
+            <artifactId>spring-boot-starter-data-search-mongodb</artifactId>
+            <version>${{ github.event.inputs.release-version }}</version>
+            </dependency>
+            ```
+
+            ##### Gradle
+            `implementation 'app.commerce-io:spring-boot-starter-data-search-mongodb:${{ github.event.inputs.release-version }}'`
+
+          draft: false
+          prerelease: ${{ github.event.inputs.prerelease }}
