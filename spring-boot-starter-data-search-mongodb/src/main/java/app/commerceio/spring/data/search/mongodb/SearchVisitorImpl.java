@@ -57,11 +57,11 @@ public class SearchVisitorImpl extends SearchBaseVisitor<Criteria> {
 
         switch (LogicalOp.logicalOp(logicalOp)) {
             case OR:
-                return new Criteria().orOperator(criteriaList);
+                return new Criteria().orOperator(criteriaList.toArray(new Criteria[0]));
             case AND:
             case UNKNOWN:
             default:
-                return new Criteria().andOperator(criteriaList);
+                return new Criteria().andOperator(criteriaList.toArray(new Criteria[0]));
         }
     }
 

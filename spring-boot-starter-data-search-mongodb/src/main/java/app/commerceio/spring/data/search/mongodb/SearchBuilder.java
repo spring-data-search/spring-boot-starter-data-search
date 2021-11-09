@@ -8,12 +8,6 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.mongodb.core.query.Criteria;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
-import static java.util.Arrays.stream;
-
 public class SearchBuilder {
 
     /**
@@ -43,11 +37,8 @@ public class SearchBuilder {
         if (criteria == null || criteria.length == 0) {
             return null;
         }
-        List<Criteria> criteriaList = stream(criteria)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
 
-        return new Criteria().andOperator(criteriaList);
+        return new Criteria().andOperator(criteria);
     }
 
     /**
@@ -60,11 +51,8 @@ public class SearchBuilder {
         if (criteria == null || criteria.length == 0) {
             return null;
         }
-        List<Criteria> criteriaList = stream(criteria)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
 
-        return new Criteria().orOperator(criteriaList);
+        return new Criteria().orOperator(criteria);
     }
 
     private SearchParser getParser(String search) {
