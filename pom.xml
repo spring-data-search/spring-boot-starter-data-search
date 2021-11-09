@@ -52,11 +52,6 @@
         <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
 
         <maven.deploy.skip>true</maven.deploy.skip>
-        <sonar.coverage.jacoco.xmlReportPaths>
-            ${project.basedir}/spring-boot-starter-data-search-core/target/site/jacoco-aggregate/jacoco.xml,
-            ${project.basedir}/spring-boot-starter-data-search-mongodb/target/site/jacoco-aggregate/jacoco.xml,
-            ${project.basedir}/spring-boot-starter-data-search-jpa/target/site/jacoco-aggregate/jacoco.xml
-        </sonar.coverage.jacoco.xmlReportPaths>
     </properties>
 
     <distributionManagement>
