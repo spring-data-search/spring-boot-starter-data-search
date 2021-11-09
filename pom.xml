@@ -13,7 +13,7 @@
 
     <groupId>app.commerce-io</groupId>
     <artifactId>spring-boot-starter-data-search</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <url>https://github.com/commerce-io/spring-boot-starter-data-search</url>
