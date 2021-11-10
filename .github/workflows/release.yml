@@ -38,12 +38,6 @@ jobs:
           MAVEN_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
-      - name: Generate changelog
-        id: changelog
-        uses: metcalfc/changelog-generator@v1.0.1
-        with:
-          myToken: ${{ secrets.GITHUB_TOKEN }}
-
       - uses: actions/create-release@v1
         id: create_release
         env:
@@ -65,7 +59,5 @@ jobs:
             ##### Gradle
             `implementation 'app.commerce-io:spring-boot-starter-data-search-mongodb:${{ github.event.inputs.release-version }}'`
 
-            ### Things that changed in this release
-            ${{ steps.changelog.outputs.changelog }}
           draft: false
           prerelease: ${{ github.event.inputs.prerelease }}

@@ -1,7 +1,4 @@
 [![build](https://github.com/commerce-io/spring-boot-starter-data-search/actions/workflows/build.yml/badge.svg)](https://github.com/commerce-io/spring-boot-starter-data-search/actions/workflows/build.yml)
-[![versionjava](https://img.shields.io/badge/jdk-11,_17-brightgreen.svg?logo=java)]()
-[![license](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://github.com/commerce-io/spring-boot-starter-data-search/blob/main/LICENSE.txt)
-
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=commerce-io_spring-boot-starter-data-search&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=commerce-io_spring-boot-starter-data-search)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=commerce-io_spring-boot-starter-data-search&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=commerce-io_spring-boot-starter-data-search)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=commerce-io_spring-boot-starter-data-search&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=commerce-io_spring-boot-starter-data-search)
@@ -15,13 +12,32 @@
   <p align="center">
     Spring-Data search API augmented with Natural Language support.
   </p>
+  <p align="center">
+    <label><i>Already supported:</i> </label><br>
+    <img src="https://img.shields.io/badge/SpringBoot->_2.1.0-%236DB33F.svg?logo=spring-boot&logoColor=white">
+    <img src="https://img.shields.io/badge/jdk->_11-%236DB33F.svg?logo=java&logoColor=white">
+    <img src="https://img.shields.io/badge/MongoDB-%236DB33F.svg?logo=mongodb&logoColor=white">
+  </p>
+  <p align="center">
+    <label><i>Coming soon:</i> </label><br>
+    <img src="https://img.shields.io/badge/SpringBoot-_2.0.x-B1361E.svg?logo=spring-boot&logoColor=white">
+    <img src="https://img.shields.io/badge/jdk-_8-B1361E.svg?logo=java&logoColor=white">
+    <img src="https://img.shields.io/badge/JPA-B1361E.svg?logo=hibernate&logoColor=white">
+  </p>
+<p align="center">
+    <label><i>Demo:</i> </label><br>
+    <a href="https://github.com/commerce-io/spring-boot-starter-data-search-mongodb-demo" target="_blank" rel="noreferrer noopener">spring-boot-starter-data-search-mongodb-demo</a>
+  </p>
 </p>
+
 
 ## Table of contents
 
-- [Made for complexe search](#made-for-complexe-search)
-- [Simplify your search API](#simplify-your-search-api)
+- [Unleash your search API](#unleash-your-search-api)
 - [How it works](#how-it-works)
+  - [Operators](#operators)
+  - [Supported values](#supported-values)
+  - [Use cases](#use-cases)
 - [Getting Started](#getting-started)
   - [Use with mongodb](#use-with-mongodb)
     - [Demo](#demo)
@@ -32,10 +48,13 @@
   - [Use with jpa](#use-with-jpa)
   - [License](#license)
 
-## Made for complex search
-If you need a complex/ complete filter to access your data, based on multiple criteria, and you don't want to implement a dedicated query for each combination, then this is made for you.
+## Unleash your search API
+* If you need a complex/ complete filter to access your data, based on multiple criteria,
+* If you don't want to implement a dedicated query for each combination, 
+* If you want your search API to be up-to-date and not impacted by your data structure changes,
 
-## Simplify your search API
+Then this is made for you.
+
 data-search provides a custom repository, to perform advanced search with Natural Language queries.
 
 **Interface**
@@ -50,9 +69,10 @@ Page<Customer> customers = customerRepository.findAll(search, Pageable.unpaged()
 ```
 
 ## How it works?
-data-search uses [ANTLR](https://www.antlr.org/) to build and parse the search grammar.
+Data-search uses [ANTLR](https://www.antlr.org/) to build the search grammar, parse the natural language query into a criteria tree.
+The search grammar supports logical operators (and, or - case-insensitive), matching operators, and parenthesis for priorities.
 
-**Operators**
+### Operators
 | Operator | Description |Example|
 | --- | --- | --- |
 | : | equal | emailAddressVerified : true |
@@ -66,7 +86,7 @@ data-search uses [ANTLR](https://www.antlr.org/) to build and parse the search g
 |  | exists (is not null) | birthDate |
 | ! | doesn't exist (is null) | !birthDate |
 
-**Supported values**
+### Supported values
 | Format | Description |Example|
 | --- | --- | --- |
 | String | Strings must be between " or ' if the valeu contains one of the operator or logical operators | firstName : Stan |
@@ -77,6 +97,8 @@ data-search uses [ANTLR](https://www.antlr.org/) to build and parse the search g
 | Array | Comma separated values (Comma must be escaped (\,) if it's aimed to be used as part of the value)  | countryCode : FR,CH,CN |
 | RegEx | Regular expression, supported only for mongodb ([see documentation](https://docs.mongodb.com/manual/reference/operator/query/regex/)) | emailAddress : '/.*gmail.com/' |
 
+### Use cases
+See detailed search use cases [here](./docs/use-cases.md)
 
 ## Getting Started
 
@@ -103,7 +125,7 @@ https://github.com/commerce-io/spring-boot-starter-data-search-mongodb-demo
 
 ##### Gradle
 
-`implementation 'app.commerce-io:spring-boot-starter-data-search-mongodb:0.0.1'`
+`implementation 'app.commerce-io:spring-boot-starter-data-search-mongodb:1.0.0'`
 
 #### Usage
 
@@ -160,6 +182,9 @@ jpa support will be released in the coming versions
 ## License
 
 This software is released under the Apache license. See `LICENSE` for more information.
+
+[![license](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://github.com/commerce-io/spring-boot-starter-data-search/blob/main/LICENSE.txt)
+
 
 [license-shield]: https://img.shields.io/badge/License-Apache_2.0-blue.svg
 [license-url]: https://github.com/commerce-io/spring-boot-starter-data-search/blob/main/LICENSE.txt
