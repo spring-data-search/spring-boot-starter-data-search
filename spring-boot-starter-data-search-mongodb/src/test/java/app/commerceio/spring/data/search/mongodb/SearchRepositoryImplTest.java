@@ -1,7 +1,5 @@
 package app.commerceio.spring.data.search.mongodb;
 
-import app.commerceio.spring.data.search.mongodb.SearchBuilder;
-import app.commerceio.spring.data.search.mongodb.SearchRepositoryImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

@@ -1,25 +1,15 @@
 package app.commerceio.spring.data.search.jpa;
 
-import app.commerceio.spring.data.search.SearchCriteria;
+import app.commerceio.spring.data.search.SearchOp;
+import app.commerceio.spring.data.search.jpa.parser.PredicateBuilder;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -27,110 +17,118 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class SpecificationImpl<T> implements Specification<T> {
 
-    private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 
-    private final SearchCriteria searchCriteria;
+    private final boolean exists;
+    private final String key;
+    private final SearchOp op;
+    private final String value;
 
     @Override
     public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-        Path<?> path = getPath(root, searchCriteria.getKey());
-        String fieldName = getFieldName(searchCriteria.getKey());
-        Object value = parseValue(searchCriteria.getValue());
+        SearchCriteria searchCriteria = SearchCriteria.builder()
+                .exists(exists)
+                .key(key)
+                .op(op)
+                .value(value)
+                .root(root)
+                .build();
+
         switch (searchCriteria.getOp()) {
             case EQ:
-                return eq(criteriaBuilder, path, fieldName, value);
+                return eq(searchCriteria, criteriaBuilder);
             case NE:
-                return neq(criteriaBuilder, path, fieldName, value);
+                return ne(searchCriteria, criteriaBuilder);
             case GT:
-                return criteriaBuilder.greaterThan(path.get(fieldName), String.valueOf(value));
+                return gt(searchCriteria, criteriaBuilder);
             case GE:
-                return criteriaBuilder.greaterThanOrEqualTo(path.get(fieldName), String.valueOf(value));
+                return ge(searchCriteria, criteriaBuilder);
             case LT:
-                return criteriaBuilder.lessThan(path.get(fieldName), String.valueOf(value));
+                return lt(searchCriteria, criteriaBuilder);
             case LE:
-                return criteriaBuilder.lessThanOrEqualTo(path.get(fieldName), String.valueOf(value));
+                return le(searchCriteria, criteriaBuilder);
             case EXISTS:
-                if (searchCriteria.isExists()) {
-                    return criteriaBuilder.isNotNull(path.get(fieldName));
-                } else {
-                    return criteriaBuilder.isNull(path.get(fieldName));
-                }
-            case UNKNOWN:
-                return null;
             default:
-                throw new IllegalArgumentException();
+                return exists(searchCriteria, criteriaBuilder);
         }
     }
 
-    private Predicate neq(CriteriaBuilder criteriaBuilder, Path<?> path, String fieldName, Object value) {
-        if (value instanceof List) {
-            return criteriaBuilder.not(criteriaBuilder.in(path.get(fieldName).in(((List<?>) value).toArray())));
+    private Predicate exists(SearchCriteria searchCriteria, CriteriaBuilder criteriaBuilder) {
+        if (searchCriteria.isExists()) {
+            return criteriaBuilder.isNotNull(searchCriteria.getPath().get(searchCriteria.getKey()));
         } else {
-            return criteriaBuilder.notEqual(path.get(fieldName), value);
+            return criteriaBuilder.isNull(searchCriteria.getPath().get(searchCriteria.getKey()));
         }
     }
 
-    private Predicate eq(CriteriaBuilder criteriaBuilder, Path<?> path, String fieldName, Object value) {
-        if (value instanceof List) {
-            return criteriaBuilder.in(path.get(fieldName).in(((List<?>) value).toArray()));
-        } else {
-            return criteriaBuilder.equal(path.get(fieldName), value);
-        }
-    }
-
-    private Path<?> getPath(Root<T> root, String key) {
-        if (StringUtils.isBlank(key)) {
-            return root;
-        }
-        String[] keyArray = StringUtils.split(key, ".");
-        if (keyArray.length <= 1) {
-            return root;
-        }
-        String[] keyList = Arrays.copyOf(keyArray, keyArray.length - 1);
-        Path<?> path = root;
-        for (String k : keyList) {
-            path = path.get(k);
-        }
-        return path;
-    }
-
-    private String getFieldName(String key) {
-        List<String> keys = Arrays.asList(StringUtils.split(key, "."));
-        return keys.get(keys.size() - 1);
-    }
-
-    private Object parseValue(String value) {
-
-        if (value == null) {
-            return null;
-        }
-
-        String[] parts = StringUtils.split(value, ",");
-        if (parts.length > 1) {
-            return Stream.of(parts)
-                    .map(this::parseValue)
+    private Predicate eq(SearchCriteria searchCriteria, CriteriaBuilder criteriaBuilder) {
+        if (searchCriteria.isArray()) {
+            var values = Stream.of(getValues(searchCriteria.getValue()))
+                    .map(this::cleanValue)
                     .collect(Collectors.toList());
+            return PredicateBuilder.builder(searchCriteria.getType()).in(searchCriteria.getPath(),
+                    searchCriteria.getKey(), values, criteriaBuilder);
+        } else {
+            String value = cleanValue(searchCriteria.getValue());
+            if (searchCriteria.isStartsWith() || searchCriteria.isEndsWith()) {
+                return PredicateBuilder.builder(searchCriteria.getType()).like(searchCriteria.getPath(),
+                        searchCriteria.getKey(), value, searchCriteria.isStartsWith(), searchCriteria.isEndsWith(), criteriaBuilder);
+            } else {
+                return PredicateBuilder.builder(searchCriteria.getType()).eq(searchCriteria.getPath(),
+                        searchCriteria.getKey(), value, criteriaBuilder);
+            }
         }
-
-        if ("true".equalsIgnoreCase(value) || "false".equalsIgnoreCase(value)) {
-            return Boolean.parseBoolean(value);
-        }
-
-        try {
-            return parseLocalDateTime(value);
-        } catch (DateTimeParseException | IllegalArgumentException ignored) {
-        }
-
-        try {
-            return NumberFormat.getInstance().parse(value);
-        } catch (ParseException ignored) {
-        }
-
-        return value;
     }
 
-    private Instant parseLocalDateTime(String value) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
-        return LocalDateTime.parse(value, formatter).atZone(ZoneOffset.UTC).toInstant();
+    private Predicate ne(SearchCriteria searchCriteria, CriteriaBuilder criteriaBuilder) {
+        if (searchCriteria.isArray()) {
+            var values = Stream.of(getValues(searchCriteria.getValue()))
+                    .map(this::cleanValue)
+                    .collect(Collectors.toList());
+            return PredicateBuilder.builder(searchCriteria.getType()).nin(searchCriteria.getPath(),
+                    searchCriteria.getKey(), values, criteriaBuilder);
+        } else {
+            String value = cleanValue(searchCriteria.getValue());
+            if (searchCriteria.isStartsWith() || searchCriteria.isEndsWith()) {
+                return PredicateBuilder.builder(searchCriteria.getType()).nlike(searchCriteria.getPath(),
+                        searchCriteria.getKey(), value, searchCriteria.isStartsWith(), searchCriteria.isEndsWith(), criteriaBuilder);
+            } else {
+                return PredicateBuilder.builder(searchCriteria.getType()).ne(searchCriteria.getPath(),
+                        searchCriteria.getKey(), value, criteriaBuilder);
+            }
+        }
+    }
+
+    private Predicate gt(SearchCriteria searchCriteria, CriteriaBuilder criteriaBuilder) {
+        String value = cleanValue(searchCriteria.getValue());
+        return PredicateBuilder.builder(searchCriteria.getType()).gt(searchCriteria.getPath(),
+                searchCriteria.getKey(), value, criteriaBuilder);
+    }
+
+    private Predicate ge(SearchCriteria searchCriteria, CriteriaBuilder criteriaBuilder) {
+        String value = cleanValue(searchCriteria.getValue());
+        return PredicateBuilder.builder(searchCriteria.getType()).ge(searchCriteria.getPath(),
+                searchCriteria.getKey(), value, criteriaBuilder);
+    }
+
+    private Predicate lt(SearchCriteria searchCriteria, CriteriaBuilder criteriaBuilder) {
+        String value = cleanValue(searchCriteria.getValue());
+        return PredicateBuilder.builder(searchCriteria.getType()).lt(searchCriteria.getPath(),
+                searchCriteria.getKey(), value, criteriaBuilder);
+    }
+
+    private Predicate le(SearchCriteria searchCriteria, CriteriaBuilder criteriaBuilder) {
+        String value = cleanValue(searchCriteria.getValue());
+        return PredicateBuilder.builder(searchCriteria.getType()).le(searchCriteria.getPath(),
+                searchCriteria.getKey(), value, criteriaBuilder);
+    }
+
+    private String[] getValues(String value) {
+        return value.split("(?<!\\\\),");
+    }
+
+    private String cleanValue(String value) {
+        return value
+                .replace("\\,", ",")
+                .replace("\\*", "*");
     }
 }

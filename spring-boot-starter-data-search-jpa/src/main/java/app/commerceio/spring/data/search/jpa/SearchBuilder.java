@@ -8,9 +8,6 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 
-import static java.util.Arrays.spliterator;
-import static java.util.Arrays.stream;
-
 public class SearchBuilder {
 
     public <T> Specification<T> parse(String search) {

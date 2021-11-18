@@ -4,16 +4,15 @@ import org.apache.commons.lang3.StringUtils;
 
 public enum LogicalOp {
 
-    AND, OR, UNKNOWN;
+    AND, OR;
 
     public static LogicalOp logicalOp(String input) {
         switch (StringUtils.lowerCase(input)) {
-            case "and":
-                return AND;
             case "or":
                 return OR;
+            case "and":
             default:
-                return UNKNOWN;
+                return AND;
         }
     }
 

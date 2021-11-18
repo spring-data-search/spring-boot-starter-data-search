@@ -1,6 +1,5 @@
 package app.commerceio.spring.data.search.mongodb;
 
-import app.commerceio.spring.data.search.SearchCriteria;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.bson.BsonRegularExpression;
@@ -61,7 +60,7 @@ public class CriteriaBuilder {
         } else if (Boolean.class.equals(searchCriteria.getType())) {
             return eqCriteriaForBooleanValue(searchCriteria);
         } else if (Instant.class.equals(searchCriteria.getType())) {
-            return eqCriteriaForDateValue(searchCriteria);
+            return eqCriteriaForInstantValue(searchCriteria);
         }
         return eqCriteria(searchCriteria);
     }
@@ -72,7 +71,7 @@ public class CriteriaBuilder {
         } else if (Boolean.class.equals(searchCriteria.getType())) {
             return neCriteriaForBooleanValue(searchCriteria);
         } else if (Instant.class.equals(searchCriteria.getType())) {
-            return neCriteriaForDateValue(searchCriteria);
+            return neCriteriaForInstantValue(searchCriteria);
         }
         return neCriteria(searchCriteria);
     }
@@ -83,7 +82,7 @@ public class CriteriaBuilder {
         } else if (Boolean.class.equals(searchCriteria.getType())) {
             return gtCriteriaForBooleanValue(searchCriteria);
         } else if (Instant.class.equals(searchCriteria.getType())) {
-            return gtCriteriaForDateValue(searchCriteria);
+            return gtCriteriaForInstantValue(searchCriteria);
         }
         return gtCriteria(searchCriteria);
     }
@@ -94,7 +93,7 @@ public class CriteriaBuilder {
         } else if (Boolean.class.equals(searchCriteria.getType())) {
             return gteCriteriaForBooleanValue(searchCriteria);
         } else if (Instant.class.equals(searchCriteria.getType())) {
-            return gteCriteriaForDateValue(searchCriteria);
+            return gteCriteriaForInstantValue(searchCriteria);
         }
         return gteCriteria(searchCriteria);
     }
@@ -105,7 +104,7 @@ public class CriteriaBuilder {
         } else if (Boolean.class.equals(searchCriteria.getType())) {
             return ltCriteriaForBooleanValue(searchCriteria);
         } else if (Instant.class.equals(searchCriteria.getType())) {
-            return ltCriteriaForDateValue(searchCriteria);
+            return ltCriteriaForInstantValue(searchCriteria);
         }
         return ltCriteria(searchCriteria);
     }
@@ -116,7 +115,7 @@ public class CriteriaBuilder {
         } else if (Boolean.class.equals(searchCriteria.getType())) {
             return lteCriteriaForBooleanValue(searchCriteria);
         } else if (Instant.class.equals(searchCriteria.getType())) {
-            return lteCriteriaForDateValue(searchCriteria);
+            return lteCriteriaForInstantValue(searchCriteria);
         }
         return lteCriteria(searchCriteria);
     }
@@ -306,7 +305,7 @@ public class CriteriaBuilder {
     }
 
 
-    private Criteria eqCriteriaForDateValue(SearchCriteria searchCriteria) {
+    private Criteria eqCriteriaForInstantValue(SearchCriteria searchCriteria) {
         if (searchCriteria.isArray()) {
             String[] values = getValues(searchCriteria.getValue());
 
@@ -315,19 +314,19 @@ public class CriteriaBuilder {
             Criteria stringCriteria = Criteria.where(searchCriteria.getKey()).in(stringValues);
 
             var dateValues = Stream.of(values)
-                    .map(this::getDateValue)
+                    .map(this::getInstantValue)
                     .filter(Objects::nonNull)
                     .toArray();
             Criteria dateCriteria = Criteria.where(searchCriteria.getKey()).in(dateValues);
             return new Criteria().orOperator(stringCriteria, dateCriteria);
         } else {
             Criteria stringCriteria = Criteria.where(searchCriteria.getKey()).is(searchCriteria.getValue());
-            Criteria dateCriteria = Criteria.where(searchCriteria.getKey()).is(getDateValue(searchCriteria.getValue()));
+            Criteria dateCriteria = Criteria.where(searchCriteria.getKey()).is(getInstantValue(searchCriteria.getValue()));
             return new Criteria().orOperator(stringCriteria, dateCriteria);
         }
     }
 
-    private Criteria neCriteriaForDateValue(SearchCriteria searchCriteria) {
+    private Criteria neCriteriaForInstantValue(SearchCriteria searchCriteria) {
         if (searchCriteria.isArray()) {
             String[] values = getValues(searchCriteria.getValue());
 
@@ -336,46 +335,46 @@ public class CriteriaBuilder {
             Criteria stringCriteria = Criteria.where(searchCriteria.getKey()).nin(stringValues);
 
             var dateValues = Stream.of(values)
-                    .map(this::getDateValue)
+                    .map(this::getInstantValue)
                     .filter(Objects::nonNull)
                     .toArray();
             Criteria dateCriteria = Criteria.where(searchCriteria.getKey()).nin(dateValues);
             return new Criteria().orOperator(stringCriteria, dateCriteria);
         } else {
             Criteria stringCriteria = Criteria.where(searchCriteria.getKey()).ne(searchCriteria.getValue());
-            Criteria dateCriteria = Criteria.where(searchCriteria.getKey()).ne(getDateValue(searchCriteria.getValue()));
+            Criteria dateCriteria = Criteria.where(searchCriteria.getKey()).ne(getInstantValue(searchCriteria.getValue()));
             return new Criteria().orOperator(stringCriteria, dateCriteria);
         }
     }
 
-    private Criteria gtCriteriaForDateValue(SearchCriteria searchCriteria) {
+    private Criteria gtCriteriaForInstantValue(SearchCriteria searchCriteria) {
         Criteria stringCriteria = Criteria.where(searchCriteria.getKey()).gt(searchCriteria.getValue());
 
-        Instant instant = getDateValue(searchCriteria.getValue());
+        Instant instant = getInstantValue(searchCriteria.getValue());
         Criteria numberCriteria = Criteria.where(searchCriteria.getKey()).gt(instant != null ? instant : stringCriteria);
         return new Criteria().orOperator(stringCriteria, numberCriteria);
     }
 
-    private Criteria gteCriteriaForDateValue(SearchCriteria searchCriteria) {
+    private Criteria gteCriteriaForInstantValue(SearchCriteria searchCriteria) {
         Criteria stringCriteria = Criteria.where(searchCriteria.getKey()).gte(searchCriteria.getValue());
 
-        Instant instant = getDateValue(searchCriteria.getValue());
+        Instant instant = getInstantValue(searchCriteria.getValue());
         Criteria numberCriteria = Criteria.where(searchCriteria.getKey()).gte(instant != null ? instant : stringCriteria);
         return new Criteria().orOperator(stringCriteria, numberCriteria);
     }
 
-    private Criteria ltCriteriaForDateValue(SearchCriteria searchCriteria) {
+    private Criteria ltCriteriaForInstantValue(SearchCriteria searchCriteria) {
         Criteria stringCriteria = Criteria.where(searchCriteria.getKey()).lt(searchCriteria.getValue());
 
-        Instant instant = getDateValue(searchCriteria.getValue());
+        Instant instant = getInstantValue(searchCriteria.getValue());
         Criteria numberCriteria = Criteria.where(searchCriteria.getKey()).lt(instant != null ? instant : stringCriteria);
         return new Criteria().orOperator(stringCriteria, numberCriteria);
     }
 
-    private Criteria lteCriteriaForDateValue(SearchCriteria searchCriteria) {
+    private Criteria lteCriteriaForInstantValue(SearchCriteria searchCriteria) {
         Criteria stringCriteria = Criteria.where(searchCriteria.getKey()).lte(searchCriteria.getValue());
 
-        Instant instant = getDateValue(searchCriteria.getValue());
+        Instant instant = getInstantValue(searchCriteria.getValue());
         Criteria numberCriteria = Criteria.where(searchCriteria.getKey()).lte(instant != null ? instant : stringCriteria);
         return new Criteria().orOperator(stringCriteria, numberCriteria);
     }
@@ -416,7 +415,7 @@ public class CriteriaBuilder {
         return Boolean.valueOf(value);
     }
 
-    private Instant getDateValue(String value) {
+    private Instant getInstantValue(String value) {
         try {
             return OffsetDateTime.parse(value).toInstant();
         } catch (Exception ignored) {

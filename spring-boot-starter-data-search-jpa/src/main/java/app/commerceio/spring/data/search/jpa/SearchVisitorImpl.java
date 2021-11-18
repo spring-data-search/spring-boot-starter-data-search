@@ -2,7 +2,6 @@ package app.commerceio.spring.data.search.jpa;
 
 import app.commerceio.spring.data.search.LogicalOp;
 import app.commerceio.spring.data.search.SearchBaseVisitor;
-import app.commerceio.spring.data.search.SearchCriteria;
 import app.commerceio.spring.data.search.SearchOp;
 import app.commerceio.spring.data.search.SearchParser.AtomSearchContext;
 import app.commerceio.spring.data.search.SearchParser.CriteriaContext;
@@ -13,8 +12,6 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,19 +37,17 @@ public class SearchVisitorImpl<T> extends SearchBaseVisitor<Specification<T>> {
     @Override
     public Specification<T> visitOpSearch(OpSearchContext ctx) {
 
-        List<Specification<T>> specificationList = new ArrayList<>();
         var left = visit(ctx != null ? ctx.left : null);
         var right = visit(ctx != null ? ctx.right : null);
 
         String logicalOp = ctx != null ? (ctx.logicalOp != null ? ctx.logicalOp.getText() : null) : null;
 
         switch (LogicalOp.logicalOp(logicalOp)) {
-            case AND:
-            case UNKNOWN:
-                return and(left, right);
             case OR:
-            default:
                 return or(left, right);
+            case AND:
+            default:
+                return and(left, right);
         }
     }
 
@@ -96,18 +91,12 @@ public class SearchVisitorImpl<T> extends SearchBaseVisitor<Specification<T>> {
         SearchOp searchOp = SearchOp.searchOp(trimToEmpty(op));
         Matcher matcher = keyPattern.matcher(URLDecoder.decode(trimToNull(key), StandardCharsets.UTF_8));
         if (matcher.matches()) {
-            return buildSpecification(SearchCriteria.builder()
+            return SpecificationImpl.<T>builder()
                     .exists(isEmpty(matcher.group(1)))
                     .key(matcher.group(2))
                     .op(searchOp)
-                    .value(value).build());
+                    .value(value).build();
         }
         return null;
-    }
-
-    private Specification<T> buildSpecification(SearchCriteria searchCriteria) {
-        return SpecificationImpl.<T>builder()
-                .searchCriteria(searchCriteria)
-                .build();
     }
 }
