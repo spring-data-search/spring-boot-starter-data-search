@@ -1,9 +1,7 @@
 package app.commerceio.spring.data.search.mongodb;
 
 import com.mongodb.BasicDBList;
-import app.commerceio.spring.data.search.SearchCriteria;
 import app.commerceio.spring.data.search.SearchOp;
-import app.commerceio.spring.data.search.mongodb.CriteriaBuilder;
 import org.bson.BsonRegularExpression;
 import org.bson.Document;
 import org.junit.jupiter.api.Test;

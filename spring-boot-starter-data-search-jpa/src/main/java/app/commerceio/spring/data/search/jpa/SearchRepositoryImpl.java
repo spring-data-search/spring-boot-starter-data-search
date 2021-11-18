@@ -15,11 +15,10 @@ public class SearchRepositoryImpl<T, ID extends Serializable> extends SimpleJpaR
     private final SearchBuilder searchBuilder;
 
     public SearchRepositoryImpl(final JpaEntityInformation<T, ?> entityInformation,
-                                final EntityManager entityManager,
-                                final SearchBuilder searchBuilder) {
+                                final EntityManager entityManager) {
         super(entityInformation, entityManager);
 
-        this.searchBuilder = searchBuilder;
+        this.searchBuilder = new SearchBuilder();
     }
 
     @Override

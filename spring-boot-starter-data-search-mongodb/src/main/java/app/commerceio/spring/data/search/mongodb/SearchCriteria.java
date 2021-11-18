@@ -1,5 +1,6 @@
-package app.commerceio.spring.data.search;
+package app.commerceio.spring.data.search.mongodb;
 
+import app.commerceio.spring.data.search.SearchOp;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

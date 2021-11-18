@@ -2,12 +2,12 @@
 ```json
 {
     "id": "UUID",
-    "ref": Long,
+    "ref": "Long",
     "title": "String",
     "firstName": "String",
     "lastName": "String",
     "emailAddress": "String",
-    "emailAddressVerified": Boolean,
+    "emailAddressVerified": "Boolean",
     "birthDate": "LocalDate",
     "addresses": [
         {
@@ -18,7 +18,7 @@
             "countryCode": "String"
         }
     ],
-    "coins": BigDecimal,
+    "coins": "BigDecimal",
     "createdDate": "OffsetDateTime"
 }
 ```
@@ -33,15 +33,44 @@
 
   `addresses.countryCode: CH`
 
-* _search customers with a verified email address ending with gmail.com or protonmail.com_
+* _search customers with a verified email address ending with gmail.com or starting with test_
 
-  `emailAddressVerified: true and (emailAddress : /.*gmail.com/ or emailAddress: /.*protonmail.com/)`
+  * _mongodb_
 
+    `emailAddressVerified: true and (emailAddress : /.*gmail.com/ or emailAddress: /test.*/)`
+
+  * _jpa_
+
+    `emailAddressVerified: true and (emailAddress : *gmail.com or emailAddress: test*)`
+  
 * _search customers with the first name Adam, case-insensitive_
 
-  `firstName: /^Adam/i`
+  * _mongodb_
+
+    `firstName: /^Adam/i`
+
+  * _jpa_
+
+    `No supported`
 
 #### not equal
+* _search customers not born the 1988-01-01_
+
+  `birthDate !: 1988-01-01`
+
+* _search customers having address outside Switzerland_
+
+  `addresses.countryCode !: CH`
+
+* _search customers with unverified email address not ending with gmail.com and not starting with test_
+
+  * _mongodb_
+
+    `emailAddressVerified !: true and emailAddress !: /.*gmail.com/ and emailAddress !: /test.*/`
+
+  * _jpa_
+
+    `emailAddressVerified !: true and emailAddress !: *gmail.com and emailAddress !: test*)`
 
 #### less than
 

@@ -1,5 +1,6 @@
-package app.commerceio.spring.data.search;
+package app.commerceio.spring.data.search.mongodb;
 
+import app.commerceio.spring.data.search.SearchOp;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;

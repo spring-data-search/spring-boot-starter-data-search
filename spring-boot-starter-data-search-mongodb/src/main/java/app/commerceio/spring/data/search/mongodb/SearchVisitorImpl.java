@@ -2,7 +2,6 @@ package app.commerceio.spring.data.search.mongodb;
 
 import app.commerceio.spring.data.search.LogicalOp;
 import app.commerceio.spring.data.search.SearchBaseVisitor;
-import app.commerceio.spring.data.search.SearchCriteria;
 import app.commerceio.spring.data.search.SearchOp;
 import app.commerceio.spring.data.search.SearchParser.AtomSearchContext;
 import app.commerceio.spring.data.search.SearchParser.CriteriaContext;
@@ -59,7 +58,6 @@ public class SearchVisitorImpl extends SearchBaseVisitor<Criteria> {
             case OR:
                 return new Criteria().orOperator(criteriaList.toArray(new Criteria[0]));
             case AND:
-            case UNKNOWN:
             default:
                 return new Criteria().andOperator(criteriaList.toArray(new Criteria[0]));
         }

@@ -2,7 +2,7 @@ package app.commerceio.spring.data.search;
 
 public enum SearchOp {
 
-    EQ, NE, GT, GE, LT, LE, EXISTS, UNKNOWN;
+    EQ, NE, GT, GE, LT, LE, EXISTS;
 
     public static SearchOp searchOp(String input) {
         switch (input) {
