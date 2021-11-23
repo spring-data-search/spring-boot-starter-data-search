@@ -1,5 +1,6 @@
 package app.commerceio.spring.data.search.mongodb;
 
+import app.commerceio.spring.data.search.Mapper;
 import app.commerceio.spring.data.search.SearchLexer;
 import app.commerceio.spring.data.search.SearchParser;
 import app.commerceio.spring.data.search.SearchVisitor;
@@ -17,11 +18,23 @@ public class SearchBuilder {
      * @return A {@link Criteria} instance.
      */
     public Criteria parse(String search) {
+        return parse(search, Mapper.flatMapper().build());
+    }
+
+    /**
+     * Parse the search query.
+     *
+     * @param search A {@link String} query.
+     * @return A {@link Criteria} instance.
+     */
+    public Criteria parse(String search, Mapper mapper) {
         if (StringUtils.isBlank(search)) {
             return null;
         }
 
-        SearchVisitor<Criteria> searchVisitor = new SearchVisitorImpl();
+        SearchVisitor<Criteria> searchVisitor = SearchVisitorImpl.builder()
+                .mapper(mapper)
+                .build();
         var parser = getParser(search);
         return searchVisitor.visit(parser.input());
     }

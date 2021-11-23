@@ -1,6 +1,7 @@
 package app.commerceio.spring.data.search.jpa;
 
 import app.commerceio.spring.data.search.LogicalOp;
+import app.commerceio.spring.data.search.Mapper;
 import app.commerceio.spring.data.search.SearchBaseVisitor;
 import app.commerceio.spring.data.search.SearchOp;
 import app.commerceio.spring.data.search.SearchParser.AtomSearchContext;
@@ -8,6 +9,7 @@ import app.commerceio.spring.data.search.SearchParser.CriteriaContext;
 import app.commerceio.spring.data.search.SearchParser.InputContext;
 import app.commerceio.spring.data.search.SearchParser.OpSearchContext;
 import app.commerceio.spring.data.search.SearchParser.PrioritySearchContext;
+import lombok.Builder;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.net.URLDecoder;
@@ -19,15 +21,18 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
+@Builder
 public class SearchVisitorImpl<T> extends SearchBaseVisitor<Specification<T>> {
 
-    private static final String KEY_PATTERN = "(!?)(.*)";
 
+    private static final String KEY_PATTERN = "(!?)(.*)";
     private static final Pattern keyPattern;
 
     static {
         keyPattern = Pattern.compile(KEY_PATTERN);
     }
+
+    private final Mapper mapper;
 
     @Override
     public Specification<T> visitInput(InputContext ctx) {
@@ -90,13 +95,12 @@ public class SearchVisitorImpl<T> extends SearchBaseVisitor<Specification<T>> {
 
         SearchOp searchOp = SearchOp.searchOp(trimToEmpty(op));
         Matcher matcher = keyPattern.matcher(URLDecoder.decode(trimToNull(key), StandardCharsets.UTF_8));
-        if (matcher.matches()) {
-            return SpecificationImpl.<T>builder()
-                    .exists(isEmpty(matcher.group(1)))
-                    .key(matcher.group(2))
-                    .op(searchOp)
-                    .value(value).build();
-        }
-        return null;
+        boolean matches = matcher.matches();
+        String toKey = mapper != null ? mapper.map(matches ? matcher.group(2) : null) : matches ? matcher.group(2) : null;
+        return SpecificationImpl.<T>builder()
+                .exists(matches && isEmpty(matcher.group(1)))
+                .key(toKey)
+                .op(searchOp)
+                .value(value).build();
     }
 }
