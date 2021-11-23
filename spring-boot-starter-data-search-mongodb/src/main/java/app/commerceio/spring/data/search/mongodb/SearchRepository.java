@@ -1,5 +1,6 @@
 package app.commerceio.spring.data.search.mongodb;
 
+import app.commerceio.spring.data.search.Mapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -17,4 +18,6 @@ public interface SearchRepository<T, I extends Serializable> extends MongoReposi
     Page<T> findAll(Criteria criteria, Pageable pageable);
 
     Page<T> findAll(String search, Pageable pageable);
+
+    Page<T> findAll(String search, Pageable pageable, Mapper mapper);
 }

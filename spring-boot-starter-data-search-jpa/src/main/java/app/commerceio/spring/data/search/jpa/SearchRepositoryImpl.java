@@ -1,5 +1,6 @@
 package app.commerceio.spring.data.search.jpa;
 
+import app.commerceio.spring.data.search.Mapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,10 +24,15 @@ public class SearchRepositoryImpl<T, ID extends Serializable> extends SimpleJpaR
 
     @Override
     public Page<T> findAll(String search, Pageable pageable) {
+        return findAll(search, pageable, Mapper.flatMapper().build());
+    }
+
+    @Override
+    public Page<T> findAll(String search, Pageable pageable, Mapper mapper) {
         if (StringUtils.isBlank(search)) {
             return findAll(pageable);
         }
-        Specification<T> criteria = searchBuilder.parse(search);
+        Specification<T> criteria = searchBuilder.parse(search, mapper);
         return findAll(criteria, pageable);
     }
 }

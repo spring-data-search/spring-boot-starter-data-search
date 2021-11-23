@@ -1,5 +1,6 @@
 package app.commerceio.spring.data.search.jpa;
 
+import app.commerceio.spring.data.search.Mapper;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -1901,6 +1902,38 @@ class SpringDataSearchJpaApplicationTest {
         assertTrue(testEntityPage.getContent().stream()
                 .allMatch(testEntity -> expectedTestStringEmail.contains(testEntity.getTestStringEmail())));
     }
+
+    // SEARCH MAPPING
+    @Test
+    void search_searchMapping() {
+        initLargeTestData();
+
+        Mapper subSubEntityMapper = Mapper.flatMapper()
+                .mapping("contactTitle", "testString")
+                .mapping("contactEmail", "testStringEmail")
+                .build();
+        Mapper subEntityMapper = Mapper.mapper()
+                .mapping("addressTitle", "testString")
+                .mapping("addressEmail", "testStringEmail")
+                .mapping("contacts", "testSubSubEntities", subSubEntityMapper)
+                .build();
+        Mapper mapper = Mapper.mapper()
+                .mapping("title", "testString")
+                .mapping("email", "testStringEmail")
+                .mapping("addresses", "testSubEntities", subEntityMapper)
+                .build();
+
+        List<String> expectedTestStringEmail = List.of("lanette.okuneva@hotmail.com", "evita.emmerich@yahoo.com");
+
+        String search = "addresses.contacts.contactTitle: Mr.";
+
+        Page<TestEntity> testEntityPage = testEntityRepository.findAll(search, Pageable.unpaged(), mapper);
+        assertEquals(2, testEntityPage.getTotalElements());
+        assertTrue(testEntityPage.getContent().stream()
+                .allMatch(testEntity -> expectedTestStringEmail.contains(testEntity.getTestStringEmail())));
+    }
+
+    // INIT DATA
 
     private List<TestEntity> initLightTestData() {
         TestEntity testEntity1 = getTestEntity(null, "lanette.okuneva@hotmail.com",

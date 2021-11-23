@@ -1,5 +1,6 @@
 package app.commerceio.spring.data.search.mongodb;
 
+import app.commerceio.spring.data.search.Mapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -48,10 +49,15 @@ public class SearchRepositoryImpl<T, I extends Serializable> extends SimpleMongo
 
     @Override
     public Page<T> findAll(String search, Pageable pageable) {
+        return findAll(search, pageable, Mapper.flatMapper().build());
+    }
+
+    @Override
+    public Page<T> findAll(String search, Pageable pageable, Mapper mapper) {
         if (StringUtils.isBlank(search)) {
             return findAll(pageable);
         }
-        Criteria criteria = searchBuilder.parse(search);
+        Criteria criteria = searchBuilder.parse(search, mapper);
         return findAll(criteria, pageable);
     }
 }
