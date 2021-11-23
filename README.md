@@ -41,7 +41,7 @@
 
 - [Unleash your search API](#unleash-your-search-api)
 - [How it works?](#how-it-works)
-    - [Operators](#operators)
+    - [Supported Operators](#supported-operators)
     - [Supported values](#supported-values)
     - [Use cases](#use-cases)
 - [Getting Started](#getting-started)

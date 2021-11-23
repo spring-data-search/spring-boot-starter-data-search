@@ -12,11 +12,6 @@
     <artifactId>spring-boot-starter-data-search-jpa</artifactId>
     <packaging>jar</packaging>
 
-    <properties>
-        <sonar.skip>true</sonar.skip>
-        <maven.deploy.skip>true</maven.deploy.skip>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
