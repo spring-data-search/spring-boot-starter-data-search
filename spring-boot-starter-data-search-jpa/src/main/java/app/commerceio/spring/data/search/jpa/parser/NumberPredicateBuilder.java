@@ -16,24 +16,4 @@ public class NumberPredicateBuilder implements PredicateBuilder<Number> {
             throw new IllegalArgumentException(exception);
         }
     }
-
-    @Override
-    public Predicate gt(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.greaterThan(path.get(key), value);
-    }
-
-    @Override
-    public Predicate ge(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.greaterThanOrEqualTo(path.get(key), value);
-    }
-
-    @Override
-    public Predicate lt(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.lessThan(path.get(key), value);
-    }
-
-    @Override
-    public Predicate le(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.lessThanOrEqualTo(path.get(key), value);
-    }
 }

@@ -63,13 +63,21 @@ public interface PredicateBuilder<T> {
         return criteriaBuilder.notLike(path.get(key), likeValue);
     }
 
-    Predicate gt(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder);
+    default Predicate gt(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
+        return criteriaBuilder.greaterThan(path.get(key), value);
+    }
 
-    Predicate ge(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder);
+    default Predicate ge(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
+        return criteriaBuilder.greaterThanOrEqualTo(path.get(key), value);
+    }
 
-    Predicate lt(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder);
+    default Predicate lt(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
+        return criteriaBuilder.lessThan(path.get(key), value);
+    }
 
-    Predicate le(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder);
+    default Predicate le(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
+        return criteriaBuilder.lessThanOrEqualTo(path.get(key), value);
+    }
 
     default Predicate in(Path<?> path, String key, List<String> values, CriteriaBuilder criteriaBuilder) {
         CriteriaBuilder.In<T> in = criteriaBuilder.in(path.get(key));

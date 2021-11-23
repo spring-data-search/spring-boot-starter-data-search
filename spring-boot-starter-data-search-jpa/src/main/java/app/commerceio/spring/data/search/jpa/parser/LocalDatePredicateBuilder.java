@@ -18,21 +18,25 @@ public class LocalDatePredicateBuilder implements PredicateBuilder<LocalDate> {
 
     @Override
     public Predicate gt(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.greaterThan(path.get(key), parse(value));
+        LocalDate localDate = parse(value);
+        return criteriaBuilder.greaterThan(path.get(key), localDate);
     }
 
     @Override
     public Predicate ge(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.greaterThanOrEqualTo(path.get(key), parse(value));
+        LocalDate localDate = parse(value);
+        return criteriaBuilder.greaterThanOrEqualTo(path.get(key), localDate);
     }
 
     @Override
     public Predicate lt(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.lessThan(path.get(key), parse(value));
+        LocalDate localDate = parse(value);
+        return criteriaBuilder.lessThan(path.get(key), localDate);
     }
 
     @Override
     public Predicate le(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.lessThanOrEqualTo(path.get(key), parse(value));
+        LocalDate localDate = parse(value);
+        return criteriaBuilder.lessThanOrEqualTo(path.get(key), localDate);
     }
 }

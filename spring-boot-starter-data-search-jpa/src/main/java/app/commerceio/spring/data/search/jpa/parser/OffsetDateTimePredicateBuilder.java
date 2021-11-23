@@ -18,21 +18,25 @@ public class OffsetDateTimePredicateBuilder implements PredicateBuilder<OffsetDa
 
     @Override
     public Predicate gt(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.greaterThan(path.get(key), parse(value));
+        OffsetDateTime offsetDateTime = parse(value);
+        return criteriaBuilder.greaterThan(path.get(key), offsetDateTime);
     }
 
     @Override
     public Predicate ge(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.greaterThanOrEqualTo(path.get(key), parse(value));
+        OffsetDateTime offsetDateTime = parse(value);
+        return criteriaBuilder.greaterThanOrEqualTo(path.get(key), offsetDateTime);
     }
 
     @Override
     public Predicate lt(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.lessThan(path.get(key), parse(value));
+        OffsetDateTime offsetDateTime = parse(value);
+        return criteriaBuilder.lessThan(path.get(key), offsetDateTime);
     }
 
     @Override
     public Predicate le(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.lessThanOrEqualTo(path.get(key), parse(value));
+        OffsetDateTime offsetDateTime = parse(value);
+        return criteriaBuilder.lessThanOrEqualTo(path.get(key), offsetDateTime);
     }
 }
