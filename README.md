@@ -132,13 +132,13 @@ https://github.com/commerce-io/spring-boot-starter-data-search-mongodb-demo
 <dependency>
     <groupId>app.commerce-io</groupId>
     <artifactId>spring-boot-starter-data-search-mongodb</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0-RC2</version>
 </dependency>
 ```
 
 ##### Gradle
 
-`implementation 'app.commerce-io:spring-boot-starter-data-search-mongodb:1.0.0'`
+`implementation 'app.commerce-io:spring-boot-starter-data-search-mongodb:1.1.0-RC2'`
 
 #### Configuration
 
@@ -169,13 +169,13 @@ https://github.com/commerce-io/spring-boot-starter-data-search-jpa-demo
 <dependency>
     <groupId>app.commerce-io</groupId>
     <artifactId>spring-boot-starter-data-search-jpa</artifactId>
-    <version>1.1.0-RC1</version>
+    <version>1.1.0-RC2</version>
 </dependency>
 ```
 
 ##### Gradle
 
-`implementation 'app.commerce-io:spring-boot-starter-data-search-jpa:1.1.0-RC1'`
+`implementation 'app.commerce-io:spring-boot-starter-data-search-jpa:1.1.0-RC2'`
 
 #### Configuration
 
