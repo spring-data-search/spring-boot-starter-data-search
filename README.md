@@ -37,175 +37,170 @@
     <a href="https://github.com/commerce-io/spring-boot-starter-data-search-jpa-demo" target="_blank" rel="noreferrer noopener">spring-boot-starter-data-search-jpa-demo</a>
 </p>
 
-## Table of contents
-
-- [Unleash your search API](#unleash-your-search-api)
-- [How it works?](#how-it-works)
-    - [Supported Operators](#supported-operators)
-    - [Supported values](#supported-values)
-    - [Use cases](#use-cases)
+# Table of Contents
+- [Data Search](#data-search)
+- [Features](#features)
+  - [Comparison operators](#comparison-operators)
+  - [Supported values](#supported-values)
+- [Detailed use case](#detailed-use-case)
 - [Getting Started](#getting-started)
-    - [Requirements](#requirements)
-    - [Use with mongodb](#use-with-mongodb)
-    - [Use with jpa](#use-with-jpa)
-    - [Usage](#usage)
+  - [Requirements](#requirements)
+  - [Demo](#demo)
+    - [Mongodb demo](#mongodb-demo)
+    - [JPA demo](#jpa-demo)
+  - [Installation](#installation)
+    - [Data Search Mongodb starter](#data-search-mongodb-starter)
+    - [Data Search JPA Starter](#data-search-jpa-starter)
+  - [Configuration](#configuration)
+    - [Mongodb Repository](#mongodb-repository)
+    - [JPA Repository](#jpa-repository)
+  - [Usage](#usage)
+  - [Field Mapping](#field-mapping)
+    - [Flat Mapper](#flat-mapper)
+    - [Advanced Mapper](#advanced-mapper)
 - [License](#license)
 
-## Unleash your search API
+# Data Search
+Data Search provides an enterprise & production ready API, prowered by Spring Boot and Antlr, to query your data, and perform advanced search with Natural Language.
 
-* If you need a complex/ complete filter to access your data, based on multiple criteria,
-* If you don't want to implement a dedicated query for each combination,
-* If you want your search API to be up-to-date and not impacted by your data structure changes,
+**Search example**: users born after 1988-01-01, with an gmail or protonmail email address, having completed the email verification, and having an address in one of the following countries: France, Switzerland or China
 
-Then this is made for you.
+`birthDate >: '1988-01-01' and (emailAddress : *gmail.com or emailAddress: *protonmail.com) and emailAddressVerified: true and addresses.countryCode: 'FR,CH,CN'`
 
-data-search provides a custom repository, to perform advanced search with Natural Language queries.
+# Features
+- Logical operators (or/ and)
+- Parenthesis/ criteria prioritization
+- Mongodb and all JPA compatible db engines
+- Fields mapping/ DTO to Entities
+- Filter by subentity fields/ deep search
+- Advanced RegEx for Mongodb and like operator for JPA
+- All comparison operators
 
-**Search example**
+## Comparison operators
+#### Equal :
+`emailAddressVerified : true`
+#### Not equal !:
+`emailAddressVerified !: true`
+#### In :
+`countryCode : 'FR,CH,CN'`
+#### Not in :
+`countryCode !: 'FR,CH,CN'`
+#### Starts with :
+`firstName: S*`
+#### Ends with :
+`firstName: *S`
+#### Contains :
+`firstName: *S*`
+#### Less than <
+`birthDate < '1988-01-01'`
+#### Less than or equal <:
+`birthDate <: '1988-01-01'`
+#### Greater than >
+`birthDate > '1988-01-01'`
+#### Greater than or equal >:
+`birthDate >: '1988-01-01'`
+#### Exists (is not null)
+`birthDate`
+#### Doesn't exist (is null) !
+`!birthDate`
 
-`birthDate >: '1988-01-01' and (emailAddress : '/.*gmail.com/' or emailAddress: '/.*protonmail.com/') and emailAddressVerified: true and addresses.countryCode: 'FR,CH,CN'`
+## Supported values
+#### String
+`firstName : Stan`
+#### Boolean
+`emailAddressVerified : true`
+#### Number (Integer, Double, Long, BigDecimal)
+`ref >: 100 or coins > 6.76453`
+#### LocalTime
+`time >: '18:58:24' and time <: '18:58:24.999'`
+#### OffsetTime
+`time >: '18:58:24Z' and time <: '20:58:24.999+02:00'`
+#### LocalDate
+`birthDate >: '1988-01-01'`
+#### LocalDateTime
+`createdDate >: '2021-08-23T18:58:24' and createdDate <: '2021-10-12T18:58:24.000'`
+#### OffsetDateTime
+`createdDate >: "2021-08-23T18:58:24Z" and createdDate <: '2021-10-12T18:58:24.000+02:00'`
+#### Array
+`countryCode : 'FR,CH,CN'`
+#### RegEx
+`emailAddress : '/.*gmail.com/'`
+Regular expression, supported only for mongodb ([see documentation](https://docs.mongodb.com/manual/reference/operator/query/regex/)) |
 
-## How it works?
+# Detailed use case
 
-Data-search uses [ANTLR](https://www.antlr.org/) to build the search grammar, parse the natural language query into a
-criteria tree. The search grammar supports logical operators (and, or - case-insensitive), matching operators, and
-parenthesis for priorities.
+See detailed search use case [here](./docs/use-cases.md)
 
-### Supported operators
+# Getting Started
 
-| Operator | Example | Comment |
-| --- | --- | --- |
-| equal : | emailAddressVerified : true |  |
-| in : | countryCode : 'FR,CH,CN' | |
-| not equal !: | emailAddressVerified !: true | |
-| not in !: | countryCode !: 'FR,CH,CN' | |
-| less than < | birthDate < 1988-01-01 | |
-| less than or equal <: | birthDate <: '1988-01-01' | |
-| greater than > | birthDate > '1988-01-01' | |
-| greater than or equal >: | birthDate >: '1988-01-01' | |
-| exists (is not null) | birthDate | |
-| doesn't exist (is null) ! | !birthDate | |
-| starts with : | firstName: *S | only for jpa, for mongodb, use RegEx instead |
-| ends with with : | firstName: S* | only for jpa, for mongodb, use RegEx instead |
-| contains : | firstName: \*S* | only for jpa, for mongodb, use RegEx instead |
-
-### Supported values
-
-| Format | Example | Comment |
-| --- | --- | --- |
-| String | firstName : Stan | |
-| Boolean | emailAddressVerified : true | |
-| Number | ref >: 100 or coins > 6.76453 | Integer, Double, Long, BigDecimal |
-| LocalTime | time >: '18:58:24' and time <: '18:58:24.999' | |
-| OffsetTime | time >: '18:58:24Z' and time <: '20:58:24.999+02:00' | |
-| LocalDate | birthDate >: '1988-01-01' | |
-| LocalDateTime | createdDate >: '2021-08-23T18:58:24' and createdDate <: "2021-10-12T18:58:24.000" | must be put between " or ' and url-encoded |
-| OffsetDateTime | createdDate >: "2021-08-23T18:58:24Z" and createdDate <: '2021-10-12T18:58:24.000+02:00' | must be put between " or ' and url-encoded |
-| Array | countryCode : FR,CH,CN | Comma separated values (Comma must be escaped (\,) if it's aimed to be used as part of the value)  |
-| RegEx | emailAddress : '/.*gmail.com/' | Regular expression, supported only for mongodb ([see documentation](https://docs.mongodb.com/manual/reference/operator/query/regex/)) |
-
-### Use cases
-
-See detailed search use cases [here](./docs/use-cases.md)
-
-## Getting Started
-
-### Requirements
+## Requirements
 
 **Java version** 11 or higher (_If java 8 support is needed, please vote
 for [this issue](https://github.com/commerce-io/spring-boot-starter-data-search/issues/3)_)
 
 **SpringBoot version** 2.1.0 or higher
-
-### Use with mongodb
-
-#### Demo
-
+## Demo
+### Mongodb demo
 https://github.com/commerce-io/spring-boot-starter-data-search-mongodb-demo
 
-#### Installation
+### JPA demo
+https://github.com/commerce-io/spring-boot-starter-data-search-jpa-demo
 
-##### Maven
-
+## Installation
+#### Data Search Mongodb starter
+**Maven**
 ```xml
-
 <dependency>
     <groupId>app.commerce-io</groupId>
     <artifactId>spring-boot-starter-data-search-mongodb</artifactId>
     <version>1.1.0-RC2</version>
 </dependency>
 ```
-
-##### Gradle
-
+**Gradle**
 `implementation 'app.commerce-io:spring-boot-starter-data-search-mongodb:1.1.0-RC2'`
 
-#### Configuration
-
-In order to use the provided repository, please add the following annotation to the main class or any other
-configuration class.
-
-```java
-
-@Configuration
-@EnableMongoRepositories(repositoryBaseClass = SearchRepositoryImpl.class)
-public class DemoConfiguration {
-
-}
-```
-
-### Use with jpa
-
-#### Demo
-
-https://github.com/commerce-io/spring-boot-starter-data-search-jpa-demo
-
-#### Installation
-
-##### Maven
-
+#### Data Search JPA Starter
+**Maven**
 ```xml
-
 <dependency>
     <groupId>app.commerce-io</groupId>
     <artifactId>spring-boot-starter-data-search-jpa</artifactId>
     <version>1.1.0-RC2</version>
 </dependency>
 ```
-
-##### Gradle
-
+**Gradle**
 `implementation 'app.commerce-io:spring-boot-starter-data-search-jpa:1.1.0-RC2'`
 
-#### Configuration
-
-In order to use the provided repository, please add the following annotation to the main class or any other
+## Configuration
+Data Dearch provides a custom repository. In order to use the provided repository, add the following annotation to the main class or any other
 configuration class.
 
+### Mongodb Repository
 ```java
-
+@Configuration
+@EnableMongoRepositories(repositoryBaseClass = SearchRepositoryImpl.class)
+public class DemoConfiguration {
+}
+```
+### JPA Repository
+```java
 @Configuration
 @EnableJpaRepositories(repositoryBaseClass = SearchRepositoryImpl.class)
 public class DemoConfiguration {
-
 }
 ```
 
-### Usage
-
+## Usage
 Make your repositories extend `SearchRepository`
 
 ```java
-
 @Repository
 public interface CustomerRepository extends SearchRepository<Customer, String> {
 }
 ```
-
 And use in a controller or from anywhere else
 
 ```java
-
 @RestController
 @RequiredArgsConstructor
 public class DemoController {
@@ -231,7 +226,36 @@ public class DemoController {
 }
 ```
 
-## License
+## Field Mapping
+Users will tend to filter by the search result fields, and sometimes, your DTO structure differs from your entity/ collection.
+Data search provides a mapper, to define your custom mappings rules in two different ways:
+
+### Flat Mapper
+The flat mapper is a basic String to String mapping, which could be useful for simple usecases.
+```java
+String search = "addressName: test";
+Mapper addressMapper = Mapper.flatMapper()
+            .mapping("addressName", "address.firstName")
+            .build();
+
+Page<CustomerEntity> page = customerRepository.findAll(search, pageable, addressMapper);
+```
+### Advanced Mapper
+The advanced mapper is used for complex structure mapping, and enable reusibility of mappers. Advanced mappers can be combinaed with flat mappers.
+```java
+String search = "name: test OR addressName: test";
+Mapper addressMapper = Mapper.flatMapper()
+            .mapping("addressName", "address.firstName")
+            .build();
+Mapper mapper = Mapper.mapper()
+                .mapping("name", "firstName")
+                .mapping("address", "addressEntity", addressMapper)
+                .build();
+
+Page<CustomerEntity> page = customerRepository.findAll(search, pageable, mapper);
+```
+
+# License
 
 This software is released under the Apache license. See `LICENSE` for more information.
 
