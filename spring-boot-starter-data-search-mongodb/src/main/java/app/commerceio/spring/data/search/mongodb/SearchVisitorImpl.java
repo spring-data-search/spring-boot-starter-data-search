@@ -86,10 +86,11 @@ public class SearchVisitorImpl extends SearchBaseVisitor<Criteria> {
         SearchOp searchOp = SearchOp.searchOp(trimToEmpty(op));
         Matcher matcher = keyPattern.matcher(URLDecoder.decode(trimToNull(key), StandardCharsets.UTF_8));
         boolean matches = matcher.matches();
-        String toKey = mapper != null ? mapper.map(matches ? matcher.group(2) : null) : matches ? matcher.group(2) : null;
+        String from = matches ? matcher.group(2) : null;
+        String to = mapper != null ? mapper.map(from) : from;
         return buildCriteria(SearchCriteria.builder()
                 .exists(matches && isEmpty(matcher.group(1)))
-                .key(toKey)
+                .key(to)
                 .op(searchOp)
                 .value(value)
                 .build());

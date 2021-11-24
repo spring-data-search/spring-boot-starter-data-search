@@ -11,7 +11,7 @@ public enum LikePattern {
     private final String pattern;
 
     public static LikePattern pattern(boolean startsWith, boolean endsWith) {
-        if (startsWith & endsWith) {
+        if (startsWith && endsWith) {
             return CONTAINS;
         } else if (startsWith) {
             return STARTS_WITH;

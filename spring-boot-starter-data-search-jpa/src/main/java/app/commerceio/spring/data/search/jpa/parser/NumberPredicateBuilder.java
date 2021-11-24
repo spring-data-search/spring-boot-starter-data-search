@@ -1,8 +1,5 @@
 package app.commerceio.spring.data.search.jpa.parser;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
 import java.text.NumberFormat;
 import java.text.ParseException;
 

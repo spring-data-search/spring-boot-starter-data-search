@@ -25,7 +25,7 @@ public class Mapper {
     }
 
     public String map(String from) {
-        if (mappings == null || mappings.size() == 0) {
+        if (mappings == null || mappings.isEmpty()) {
             return from;
         }
 
@@ -39,7 +39,7 @@ public class Mapper {
     }
 
     public Pageable map(Pageable from) {
-        if (mappings == null || mappings.size() == 0) {
+        if (mappings == null || mappings.isEmpty()) {
             return from;
         }
         Sort sort = Sort.by(from.getSort().stream()

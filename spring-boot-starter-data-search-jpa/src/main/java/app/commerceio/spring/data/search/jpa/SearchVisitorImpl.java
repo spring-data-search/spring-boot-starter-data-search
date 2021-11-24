@@ -45,7 +45,10 @@ public class SearchVisitorImpl<T> extends SearchBaseVisitor<Specification<T>> {
         var left = visit(ctx != null ? ctx.left : null);
         var right = visit(ctx != null ? ctx.right : null);
 
-        String logicalOp = ctx != null ? (ctx.logicalOp != null ? ctx.logicalOp.getText() : null) : null;
+        String logicalOp = null;
+        if (ctx != null) {
+            logicalOp = ctx.logicalOp != null ? ctx.logicalOp.getText() : null;
+        }
 
         switch (LogicalOp.logicalOp(logicalOp)) {
             case OR:
@@ -96,10 +99,11 @@ public class SearchVisitorImpl<T> extends SearchBaseVisitor<Specification<T>> {
         SearchOp searchOp = SearchOp.searchOp(trimToEmpty(op));
         Matcher matcher = keyPattern.matcher(URLDecoder.decode(trimToNull(key), StandardCharsets.UTF_8));
         boolean matches = matcher.matches();
-        String toKey = mapper != null ? mapper.map(matches ? matcher.group(2) : null) : matches ? matcher.group(2) : null;
+        String from = matches ? matcher.group(2) : null;
+        String to = mapper != null ? mapper.map(from) : from;
         return SpecificationImpl.<T>builder()
                 .exists(matches && isEmpty(matcher.group(1)))
-                .key(toKey)
+                .key(to)
                 .op(searchOp)
                 .value(value).build();
     }

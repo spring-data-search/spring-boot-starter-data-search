@@ -85,9 +85,9 @@ public class SearchCriteria {
             boolean isArray = false;
             boolean startsWith = false;
             boolean endsWith = false;
-            String key = getKey(this.key);
+            String fieldName = getFieldName(this.key);
             Path<?> path = getPath(root, this.key);
-            Class<?> type = path != null ? path.get(key).getJavaType() : String.class;
+            Class<?> type = path != null ? path.get(fieldName).getJavaType() : String.class;
             if (value != null) {
                 value = StringUtils.trimToNull(value
                         .replaceAll("^\"|^'|\"$|'$", "")  // replace " or ' if it's not escaped
@@ -104,7 +104,7 @@ public class SearchCriteria {
                 String[] values = value.split("(?<!\\\\),");
                 isArray = values.length > 1;
             }
-            return new SearchCriteria(exists, key, op, value, path, isArray, type, startsWith, endsWith);
+            return new SearchCriteria(exists, fieldName, op, value, path, isArray, type, startsWith, endsWith);
         }
 
         private Path<?> getPath(Root<?> root, String key) {
@@ -132,7 +132,7 @@ public class SearchCriteria {
             }
         }
 
-        private String getKey(String key) {
+        private String getFieldName(String key) {
             List<String> keys = Arrays.asList(StringUtils.split(key, "."));
             return keys.get(keys.size() - 1);
         }

@@ -68,13 +68,13 @@ public class SpecificationImpl<T> implements Specification<T> {
             return PredicateBuilder.builder(searchCriteria.getType()).in(searchCriteria.getPath(),
                     searchCriteria.getKey(), values, criteriaBuilder);
         } else {
-            String value = cleanValue(searchCriteria.getValue());
+            String cleanValue = cleanValue(searchCriteria.getValue());
             if (searchCriteria.isStartsWith() || searchCriteria.isEndsWith()) {
                 return PredicateBuilder.builder(searchCriteria.getType()).like(searchCriteria.getPath(),
-                        searchCriteria.getKey(), value, searchCriteria.isStartsWith(), searchCriteria.isEndsWith(), criteriaBuilder);
+                        searchCriteria.getKey(), cleanValue, searchCriteria.isStartsWith(), searchCriteria.isEndsWith(), criteriaBuilder);
             } else {
                 return PredicateBuilder.builder(searchCriteria.getType()).eq(searchCriteria.getPath(),
-                        searchCriteria.getKey(), value, criteriaBuilder);
+                        searchCriteria.getKey(), cleanValue, criteriaBuilder);
             }
         }
     }
@@ -87,39 +87,39 @@ public class SpecificationImpl<T> implements Specification<T> {
             return PredicateBuilder.builder(searchCriteria.getType()).nin(searchCriteria.getPath(),
                     searchCriteria.getKey(), values, criteriaBuilder);
         } else {
-            String value = cleanValue(searchCriteria.getValue());
+            String cleanValue = cleanValue(searchCriteria.getValue());
             if (searchCriteria.isStartsWith() || searchCriteria.isEndsWith()) {
                 return PredicateBuilder.builder(searchCriteria.getType()).nlike(searchCriteria.getPath(),
-                        searchCriteria.getKey(), value, searchCriteria.isStartsWith(), searchCriteria.isEndsWith(), criteriaBuilder);
+                        searchCriteria.getKey(), cleanValue, searchCriteria.isStartsWith(), searchCriteria.isEndsWith(), criteriaBuilder);
             } else {
                 return PredicateBuilder.builder(searchCriteria.getType()).ne(searchCriteria.getPath(),
-                        searchCriteria.getKey(), value, criteriaBuilder);
+                        searchCriteria.getKey(), cleanValue, criteriaBuilder);
             }
         }
     }
 
     private Predicate gt(SearchCriteria searchCriteria, CriteriaBuilder criteriaBuilder) {
-        String value = cleanValue(searchCriteria.getValue());
+        String cleanValue = cleanValue(searchCriteria.getValue());
         return PredicateBuilder.builder(searchCriteria.getType()).gt(searchCriteria.getPath(),
-                searchCriteria.getKey(), value, criteriaBuilder);
+                searchCriteria.getKey(), cleanValue, criteriaBuilder);
     }
 
     private Predicate ge(SearchCriteria searchCriteria, CriteriaBuilder criteriaBuilder) {
-        String value = cleanValue(searchCriteria.getValue());
+        String cleanValue = cleanValue(searchCriteria.getValue());
         return PredicateBuilder.builder(searchCriteria.getType()).ge(searchCriteria.getPath(),
-                searchCriteria.getKey(), value, criteriaBuilder);
+                searchCriteria.getKey(), cleanValue, criteriaBuilder);
     }
 
     private Predicate lt(SearchCriteria searchCriteria, CriteriaBuilder criteriaBuilder) {
-        String value = cleanValue(searchCriteria.getValue());
+        String cleanValue = cleanValue(searchCriteria.getValue());
         return PredicateBuilder.builder(searchCriteria.getType()).lt(searchCriteria.getPath(),
-                searchCriteria.getKey(), value, criteriaBuilder);
+                searchCriteria.getKey(), cleanValue, criteriaBuilder);
     }
 
     private Predicate le(SearchCriteria searchCriteria, CriteriaBuilder criteriaBuilder) {
-        String value = cleanValue(searchCriteria.getValue());
+        String cleanValue = cleanValue(searchCriteria.getValue());
         return PredicateBuilder.builder(searchCriteria.getType()).le(searchCriteria.getPath(),
-                searchCriteria.getKey(), value, criteriaBuilder);
+                searchCriteria.getKey(), cleanValue, criteriaBuilder);
     }
 
     private String[] getValues(String value) {
