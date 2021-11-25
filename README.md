@@ -153,11 +153,11 @@ https://github.com/commerce-io/spring-boot-starter-data-search-jpa-demo
 <dependency>
     <groupId>app.commerce-io</groupId>
     <artifactId>spring-boot-starter-data-search-mongodb</artifactId>
-    <version>1.1.0-RC2</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 **Gradle**
-`implementation 'app.commerce-io:spring-boot-starter-data-search-mongodb:1.1.0-RC2'`
+`implementation 'app.commerce-io:spring-boot-starter-data-search-mongodb:1.1.0'`
 
 #### Data Search JPA Starter
 **Maven**
@@ -165,14 +165,14 @@ https://github.com/commerce-io/spring-boot-starter-data-search-jpa-demo
 <dependency>
     <groupId>app.commerce-io</groupId>
     <artifactId>spring-boot-starter-data-search-jpa</artifactId>
-    <version>1.1.0-RC2</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 **Gradle**
-`implementation 'app.commerce-io:spring-boot-starter-data-search-jpa:1.1.0-RC2'`
+`implementation 'app.commerce-io:spring-boot-starter-data-search-jpa:1.1.0'`
 
 ## Configuration
-Data Dearch provides a custom repository. In order to use the provided repository, add the following annotation to the main class or any other
+Data Search provides a custom repository. In order to use the provided repository, add the following annotation to the main class or any other
 configuration class.
 
 ### Mongodb Repository
