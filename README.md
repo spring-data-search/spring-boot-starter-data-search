@@ -245,8 +245,9 @@ The advanced mapper is used for complex structure mapping, and enable reusibilit
 ```java
 String search = "name: test OR addressName: test";
 Mapper addressMapper = Mapper.flatMapper()
-            .mapping("addressName", "address.firstName")
+            .mapping("addressName", "firstName")
             .build();
+
 Mapper mapper = Mapper.mapper()
                 .mapping("name", "firstName")
                 .mapping("address", "addressEntity", addressMapper)
