@@ -22,10 +22,9 @@ public class FlatMapper implements Mapper {
     }
 
     @Override
-    public MappingEntry map(String key, String value) {
+    public MappingEntry mappingEntry(String key) {
         MappingEntry mappingEntry = MappingEntry.builder()
                 .key(key)
-                .value(value)
                 .build();
 
         if (mappings == null || mappings.isEmpty()) {
@@ -34,7 +33,7 @@ public class FlatMapper implements Mapper {
         return mapping(key)
                 .map(mapping -> MappingEntry.builder()
                         .key(mapping.getTo())
-                        .value(mapping.mapValue(value))
+                        .valueMapping(mapping.mappingEntry().getValueMapping())
                         .build())
                 .orElse(mappingEntry);
     }

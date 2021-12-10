@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public interface Mapper {
 
@@ -17,7 +18,7 @@ public interface Mapper {
 
     String map(String from);
 
-    MappingEntry map(String key, String value);
+    MappingEntry mappingEntry(String key);
 
     default Pageable map(Pageable from) {
         if (getMappings() == null || getMappings().isEmpty()) {
@@ -35,31 +36,22 @@ public interface Mapper {
                 .findFirst();
     }
 
+    @Getter
     @Builder
     @RequiredArgsConstructor
     class Mapping {
-        @Getter
         private final String from;
-        @Getter
         private final String to;
-        @Getter
         private final Mapper mapper;
         private final ValueMapping valueMapping;
 
-        public String mapValue(String from) {
-            if (valueMapping == null) {
-                return from;
-            }
-            return valueMapping.map(from);
-        }
-
-        public MappingEntry mappingEntry(String from) {
+        public MappingEntry mappingEntry() {
             MappingEntry.MappingEntryBuilder mappingEntryBuilder = MappingEntry.builder()
                     .key(to);
             if (valueMapping == null) {
-                return mappingEntryBuilder.value(from).build();
+                return mappingEntryBuilder.build();
             }
-            return mappingEntryBuilder.value(valueMapping.map(from)).build();
+            return mappingEntryBuilder.valueMapping(valueMapping).build();
         }
     }
 
@@ -68,7 +60,28 @@ public interface Mapper {
     @RequiredArgsConstructor
     class MappingEntry {
         private final String key;
-        private final String value;
+        private final ValueMapping valueMapping;
+
+        public String value(String from) {
+            if (valueMapping == null) {
+                return from;
+            } else {
+                return Stream.of(getValues(from))
+                        .map(this::cleanValue)
+                        .map(valueMapping::map)
+                        .collect(Collectors.joining(","));
+            }
+        }
+
+        private String[] getValues(String value) {
+            return value.split("(?<!\\\\),");
+        }
+
+        private String cleanValue(String value) {
+            return value
+                    .replace("\\,", ",")
+                    .replace("\\*", "*");
+        }
     }
 
     static FlatMapper.FlatMapperBuilder flatMapper() {

@@ -100,11 +100,16 @@ public class SearchVisitorImpl<T> extends SearchBaseVisitor<Specification<T>> {
         Matcher matcher = keyPattern.matcher(URLDecoder.decode(trimToNull(key), StandardCharsets.UTF_8));
         boolean matches = matcher.matches();
         String from = matches ? matcher.group(2) : null;
-        String to = mapper != null ? mapper.map(from) : from;
+
+        Mapper.MappingEntry mappingEntry = mapper != null ? mapper.mappingEntry(from) : Mapper.MappingEntry.builder()
+                .key(from)
+                .build();
+
         return SpecificationImpl.<T>builder()
                 .exists(matches && isEmpty(matcher.group(1)))
-                .key(to)
+                .key(mappingEntry.getKey())
                 .op(searchOp)
-                .value(value).build();
+                .value(mappingEntry.value(value))
+                .build();
     }
 }

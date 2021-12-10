@@ -37,10 +37,9 @@ public class AdvancedMapper implements Mapper {
     }
 
     @Override
-    public MappingEntry map(String key, String value) {
+    public MappingEntry mappingEntry(String key) {
         MappingEntry mappingEntry = MappingEntry.builder()
                 .key(key)
-                .value(value)
                 .build();
 
         if (mappings == null || mappings.isEmpty()) {
@@ -50,22 +49,21 @@ public class AdvancedMapper implements Mapper {
         String[] keys = StringUtils.split(StringUtils.trimToEmpty(key), ".", 2);
         Optional<Mapping> mapping = mapping(keys[0]);
         MappingEntry firstPart = mapping
-                .map(map -> map.mappingEntry(value))
+                .map(Mapping::mappingEntry)
                 .orElse(mappingEntry);
         if (keys.length == 1) {
             return firstPart;
         } else {
             var secondPart = mapping
                     .map(Mapping::getMapper)
-                    .map(mapper -> mapper.map(keys[1], value))
+                    .map(mapper -> mapper.mappingEntry(keys[1]))
                     .orElse(MappingEntry.builder()
                             .key(keys[1])
-                            .value(value)
                             .build());
             String toKey = StringUtils.joinWith(".", firstPart.getKey(), secondPart.getKey());
             return MappingEntry.builder()
                     .key(toKey)
-                    .value(secondPart.getValue())
+                    .valueMapping(secondPart.getValueMapping())
                     .build();
         }
     }
