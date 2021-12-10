@@ -47,7 +47,8 @@ jobs:
           release_name: v${{ github.event.inputs.release-version }}
           body: |
             #### Installation
-            ##### Maven
+            ##### Data Search Mongodb starter
+            ###### Maven
             ```xml
             <dependency>
             <groupId>app.commerce-io</groupId>
@@ -56,8 +57,21 @@ jobs:
             </dependency>
             ```
 
-            ##### Gradle
+            ###### Gradle
             `implementation 'app.commerce-io:spring-boot-starter-data-search-mongodb:${{ github.event.inputs.release-version }}'`
+
+            ##### Data Search JPA Starter
+            ###### Maven
+            ```xml
+            <dependency>
+            <groupId>app.commerce-io</groupId>
+            <artifactId>spring-boot-starter-data-search-jpa</artifactId>
+            <version>${{ github.event.inputs.release-version }}</version>
+            </dependency>
+            ```
+
+            ###### Gradle
+            `implementation 'app.commerce-io:spring-boot-starter-data-search-jpa:${{ github.event.inputs.release-version }}'`
 
           draft: false
           prerelease: ${{ github.event.inputs.prerelease }}

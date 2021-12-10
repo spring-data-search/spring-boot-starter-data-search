@@ -58,6 +58,7 @@
   - [Field Mapping](#field-mapping)
     - [Flat Mapper](#flat-mapper)
     - [Advanced Mapper](#advanced-mapper)
+  - [Value Mapping](#value-mapping)
 - [License](#license)
 
 # Data Search
@@ -153,11 +154,11 @@ https://github.com/commerce-io/spring-boot-starter-data-search-jpa-demo
 <dependency>
     <groupId>app.commerce-io</groupId>
     <artifactId>spring-boot-starter-data-search-mongodb</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
 </dependency>
 ```
 **Gradle**
-`implementation 'app.commerce-io:spring-boot-starter-data-search-mongodb:1.1.0'`
+`implementation 'app.commerce-io:spring-boot-starter-data-search-mongodb:1.2.0'`
 
 #### Data Search JPA Starter
 **Maven**
@@ -165,11 +166,11 @@ https://github.com/commerce-io/spring-boot-starter-data-search-jpa-demo
 <dependency>
     <groupId>app.commerce-io</groupId>
     <artifactId>spring-boot-starter-data-search-jpa</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
 </dependency>
 ```
 **Gradle**
-`implementation 'app.commerce-io:spring-boot-starter-data-search-jpa:1.1.0'`
+`implementation 'app.commerce-io:spring-boot-starter-data-search-jpa:1.2.0'`
 
 ## Configuration
 Data Search provides a custom repository. In order to use the provided repository, add the following annotation to the main class or any other
@@ -231,7 +232,7 @@ Users will tend to filter by the search result fields, and sometimes, your DTO s
 Data search provides a mapper, to define your custom mappings rules in two different ways:
 
 ### Flat Mapper
-The flat mapper is a basic String to String mapping, which could be useful for simple usecases.
+The flat mapper is a basic String to String mapping, which could be useful for simple use cases.
 ```java
 String search = "addressName: test";
 Mapper addressMapper = Mapper.flatMapper()
@@ -241,9 +242,9 @@ Mapper addressMapper = Mapper.flatMapper()
 Page<CustomerEntity> page = customerRepository.findAll(search, pageable, addressMapper);
 ```
 ### Advanced Mapper
-The advanced mapper is used for complex structure mapping, and enable reusibility of mappers. Advanced mappers can be combinaed with flat mappers.
+The advanced mapper is used for complex structure mapping, and enable the reuse of mappers. Advanced mappers can be combined with flat mappers.
 ```java
-String search = "name: test OR addressName: test";
+String search = "name: test OR address.addressName: test";
 Mapper addressMapper = Mapper.flatMapper()
             .mapping("addressName", "firstName")
             .build();
@@ -254,6 +255,30 @@ Mapper mapper = Mapper.mapper()
                 .build();
 
 Page<CustomerEntity> page = customerRepository.findAll(search, pageable, mapper);
+```
+
+## Value Mapping
+In addition to the fields mapping, some values could be converted before returning the search result, like returning labels instead of codes in some scenarios.
+
+We recently (in the 1.2.0) added the value mapping feature to Spring Data Search, to be used as follows:
+
+```java
+public class LowerCaseValueMapping implements ValueMapping {
+
+  @Override
+  public String map(String from) {
+    return from == null ? null : from.toLowerCase();
+  }
+}
+```
+
+```java
+String search = "addressName: TeSt";
+Mapper addressMapper = Mapper.flatMapper()
+        .mapping("addressName", "address.firstName", new LowerCaseValueMapping())
+        .build();
+
+Page<CustomerEntity> page = customerRepository.findAll(search, pageable, addressMapper);
 ```
 
 # License
