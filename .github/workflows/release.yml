@@ -47,7 +47,7 @@ jobs:
           release_name: v${{ github.event.inputs.release-version }}
           body: |
             #### Installation
-            ##### Data Search Mongodb starter
+            ##### Data Search Mongodb Starter
             ###### Maven
             ```xml
             <dependency>

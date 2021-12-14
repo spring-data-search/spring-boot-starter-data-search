@@ -8,7 +8,7 @@ import java.time.OffsetTime;
 public class OffsetTimePredicateBuilder implements PredicateBuilder<OffsetTime> {
 
     @Override
-    public OffsetTime parse(String value) {
+    public OffsetTime parse(Class<?> type, String value) {
         try {
             return OffsetTime.parse(value);
         } catch (Exception exception) {
@@ -17,26 +17,26 @@ public class OffsetTimePredicateBuilder implements PredicateBuilder<OffsetTime> 
     }
 
     @Override
-    public Predicate gt(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
-        OffsetTime offsetTime = parse(value);
+    public Predicate gt(Class<?> type, Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
+        OffsetTime offsetTime = parse(type, value);
         return criteriaBuilder.greaterThan(path.get(key), offsetTime);
     }
 
     @Override
-    public Predicate ge(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
-        OffsetTime offsetTime = parse(value);
+    public Predicate ge(Class<?> type, Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
+        OffsetTime offsetTime = parse(type, value);
         return criteriaBuilder.greaterThanOrEqualTo(path.get(key), offsetTime);
     }
 
     @Override
-    public Predicate lt(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
-        OffsetTime offsetTime = parse(value);
+    public Predicate lt(Class<?> type, Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
+        OffsetTime offsetTime = parse(type, value);
         return criteriaBuilder.lessThan(path.get(key), offsetTime);
     }
 
     @Override
-    public Predicate le(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
-        OffsetTime offsetTime = parse(value);
+    public Predicate le(Class<?> type, Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
+        OffsetTime offsetTime = parse(type, value);
         return criteriaBuilder.lessThanOrEqualTo(path.get(key), offsetTime);
     }
 }

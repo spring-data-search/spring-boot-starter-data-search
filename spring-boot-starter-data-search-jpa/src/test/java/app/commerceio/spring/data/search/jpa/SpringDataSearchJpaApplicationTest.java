@@ -46,6 +46,19 @@ class SpringDataSearchJpaApplicationTest {
     // EQ
 
     @Test
+    void search_eqEnum() {
+        initLargeTestData();
+
+        List<String> expectedTestStringEmail = List.of("lanette.okuneva@hotmail.com", "ruben.dubuque@yahoo.com", "luna.feeney@gmail.com",
+                "cherie.bins@gmail.com", "evita.emmerich@yahoo.com", "karisa.stracke@gmail.com", "sherrell.goyette@yahoo.com", "leon.goyette@yahoo.com");
+
+        Page<TestEntity> testEntityPage = testEntityRepository.findAll("testEnum: VALUE1", Pageable.unpaged());
+        assertEquals(8, testEntityPage.getTotalElements());
+        assertTrue(testEntityPage.getContent().stream()
+                .allMatch(testEntity -> expectedTestStringEmail.contains(testEntity.getTestStringEmail())));
+    }
+
+    @Test
     void search_eqString() {
         initLargeTestData();
 
@@ -334,6 +347,19 @@ class SpringDataSearchJpaApplicationTest {
     // NE
 
     @Test
+    void search_neEnum() {
+        initLargeTestData();
+
+        List<String> expectedTestStringEmail = List.of("lanette.okuneva@hotmail.com", "ruben.dubuque@yahoo.com", "luna.feeney@gmail.com",
+                "cherie.bins@gmail.com", "evita.emmerich@yahoo.com", "karisa.stracke@gmail.com", "sherrell.goyette@yahoo.com", "leon.goyette@yahoo.com");
+
+        Page<TestEntity> testEntityPage = testEntityRepository.findAll("testEnum !: VALUE2", Pageable.unpaged());
+        assertEquals(8, testEntityPage.getTotalElements());
+        assertTrue(testEntityPage.getContent().stream()
+                .allMatch(testEntity -> expectedTestStringEmail.contains(testEntity.getTestStringEmail())));
+    }
+
+    @Test
     void search_neString() {
         initLargeTestData();
 
@@ -557,6 +583,19 @@ class SpringDataSearchJpaApplicationTest {
     // IN
 
     @Test
+    void search_inEnum() {
+        initLargeTestData();
+
+        List<String> expectedTestStringEmail = List.of("lanette.okuneva@hotmail.com", "ruben.dubuque@yahoo.com", "luna.feeney@gmail.com",
+                "cherie.bins@gmail.com", "evita.emmerich@yahoo.com", "karisa.stracke@gmail.com", "sherrell.goyette@yahoo.com", "leon.goyette@yahoo.com");
+
+        Page<TestEntity> testEntityPage = testEntityRepository.findAll("testEnum: 'VALUE1,VALUE2,VALUE3'", Pageable.unpaged());
+        assertEquals(8, testEntityPage.getTotalElements());
+        assertTrue(testEntityPage.getContent().stream()
+                .allMatch(testEntity -> expectedTestStringEmail.contains(testEntity.getTestStringEmail())));
+    }
+
+    @Test
     void search_inString() {
         initLargeTestData();
 
@@ -770,6 +809,19 @@ class SpringDataSearchJpaApplicationTest {
     }
 
     // NIN
+
+    @Test
+    void search_ninEnum() {
+        initLargeTestData();
+
+        List<String> expectedTestStringEmail = List.of("lanette.okuneva@hotmail.com", "ruben.dubuque@yahoo.com", "luna.feeney@gmail.com",
+                "cherie.bins@gmail.com", "evita.emmerich@yahoo.com", "karisa.stracke@gmail.com", "sherrell.goyette@yahoo.com", "leon.goyette@yahoo.com");
+
+        Page<TestEntity> testEntityPage = testEntityRepository.findAll("testEnum !: 'VALUE2,VALUE3'", Pageable.unpaged());
+        assertEquals(8, testEntityPage.getTotalElements());
+        assertTrue(testEntityPage.getContent().stream()
+                .allMatch(testEntity -> expectedTestStringEmail.contains(testEntity.getTestStringEmail())));
+    }
 
     @Test
     void search_ninString() {
@@ -987,6 +1039,19 @@ class SpringDataSearchJpaApplicationTest {
     // GT
 
     @Test
+    void search_gtEnum() {
+        initLargeTestData();
+
+        List<String> expectedTestStringEmail = List.of("lanette.okuneva@hotmail.com", "ruben.dubuque@yahoo.com", "luna.feeney@gmail.com",
+                "cherie.bins@gmail.com", "evita.emmerich@yahoo.com", "karisa.stracke@gmail.com", "sherrell.goyette@yahoo.com", "leon.goyette@yahoo.com");
+
+        Page<TestEntity> testEntityPage = testEntityRepository.findAll("testEnum > VALUE0", Pageable.unpaged());
+        assertEquals(8, testEntityPage.getTotalElements());
+        assertTrue(testEntityPage.getContent().stream()
+                .allMatch(testEntity -> expectedTestStringEmail.contains(testEntity.getTestStringEmail())));
+    }
+
+    @Test
     void search_gtString() {
         initLargeTestData();
 
@@ -1198,6 +1263,19 @@ class SpringDataSearchJpaApplicationTest {
     }
 
     // GE
+
+    @Test
+    void search_geEnum() {
+        initLargeTestData();
+
+        List<String> expectedTestStringEmail = List.of("lanette.okuneva@hotmail.com", "ruben.dubuque@yahoo.com", "luna.feeney@gmail.com",
+                "cherie.bins@gmail.com", "evita.emmerich@yahoo.com", "karisa.stracke@gmail.com", "sherrell.goyette@yahoo.com", "leon.goyette@yahoo.com");
+
+        Page<TestEntity> testEntityPage = testEntityRepository.findAll("testEnum >: VALUE1", Pageable.unpaged());
+        assertEquals(8, testEntityPage.getTotalElements());
+        assertTrue(testEntityPage.getContent().stream()
+                .allMatch(testEntity -> expectedTestStringEmail.contains(testEntity.getTestStringEmail())));
+    }
 
     @Test
     void search_geString() {
@@ -1422,6 +1500,19 @@ class SpringDataSearchJpaApplicationTest {
     // LT
 
     @Test
+    void search_ltEnum() {
+        initLargeTestData();
+
+        List<String> expectedTestStringEmail = List.of("lanette.okuneva@hotmail.com", "ruben.dubuque@yahoo.com", "luna.feeney@gmail.com",
+                "cherie.bins@gmail.com", "evita.emmerich@yahoo.com", "karisa.stracke@gmail.com", "sherrell.goyette@yahoo.com", "leon.goyette@yahoo.com");
+
+        Page<TestEntity> testEntityPage = testEntityRepository.findAll("testEnum < VALUE2", Pageable.unpaged());
+        assertEquals(8, testEntityPage.getTotalElements());
+        assertTrue(testEntityPage.getContent().stream()
+                .allMatch(testEntity -> expectedTestStringEmail.contains(testEntity.getTestStringEmail())));
+    }
+
+    @Test
     void search_ltString() {
         initLargeTestData();
 
@@ -1620,6 +1711,19 @@ class SpringDataSearchJpaApplicationTest {
     }
 
     // LE
+
+    @Test
+    void search_leEnum() {
+        initLargeTestData();
+
+        List<String> expectedTestStringEmail = List.of("lanette.okuneva@hotmail.com", "ruben.dubuque@yahoo.com", "luna.feeney@gmail.com",
+                "cherie.bins@gmail.com", "evita.emmerich@yahoo.com", "karisa.stracke@gmail.com", "sherrell.goyette@yahoo.com", "leon.goyette@yahoo.com");
+
+        Page<TestEntity> testEntityPage = testEntityRepository.findAll("testEnum <: VALUE1", Pageable.unpaged());
+        assertEquals(8, testEntityPage.getTotalElements());
+        assertTrue(testEntityPage.getContent().stream()
+                .allMatch(testEntity -> expectedTestStringEmail.contains(testEntity.getTestStringEmail())));
+    }
 
     @Test
     void search_leString() {
@@ -1988,6 +2092,7 @@ class SpringDataSearchJpaApplicationTest {
                                      double testDouble, int testInteger, long testLong, float testFloat,
                                      String testSubString, String testSubStringEmail) {
         TestEntity testEntity = TestEntity.builder()
+                .testEnum(TestEnum.VALUE1)
                 .testString(testString)
                 .testStringEmail(testStringEmail)
                 .testLocalDate(LocalDate.of(year, month, dayOfMonth))

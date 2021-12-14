@@ -8,7 +8,7 @@ import java.time.OffsetDateTime;
 public class OffsetDateTimePredicateBuilder implements PredicateBuilder<OffsetDateTime> {
 
     @Override
-    public OffsetDateTime parse(String value) {
+    public OffsetDateTime parse(Class<?> type, String value) {
         try {
             return OffsetDateTime.parse(value);
         } catch (Exception exception) {
@@ -17,26 +17,26 @@ public class OffsetDateTimePredicateBuilder implements PredicateBuilder<OffsetDa
     }
 
     @Override
-    public Predicate gt(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
-        OffsetDateTime offsetDateTime = parse(value);
+    public Predicate gt(Class<?> type, Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
+        OffsetDateTime offsetDateTime = parse(type, value);
         return criteriaBuilder.greaterThan(path.get(key), offsetDateTime);
     }
 
     @Override
-    public Predicate ge(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
-        OffsetDateTime offsetDateTime = parse(value);
+    public Predicate ge(Class<?> type, Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
+        OffsetDateTime offsetDateTime = parse(type, value);
         return criteriaBuilder.greaterThanOrEqualTo(path.get(key), offsetDateTime);
     }
 
     @Override
-    public Predicate lt(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
-        OffsetDateTime offsetDateTime = parse(value);
+    public Predicate lt(Class<?> type, Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
+        OffsetDateTime offsetDateTime = parse(type, value);
         return criteriaBuilder.lessThan(path.get(key), offsetDateTime);
     }
 
     @Override
-    public Predicate le(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
-        OffsetDateTime offsetDateTime = parse(value);
+    public Predicate le(Class<?> type, Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
+        OffsetDateTime offsetDateTime = parse(type, value);
         return criteriaBuilder.lessThanOrEqualTo(path.get(key), offsetDateTime);
     }
 }

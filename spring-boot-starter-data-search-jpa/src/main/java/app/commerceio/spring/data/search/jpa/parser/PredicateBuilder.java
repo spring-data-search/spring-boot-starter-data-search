@@ -16,7 +16,7 @@ import static app.commerceio.spring.data.search.jpa.LikePattern.pattern;
 
 public interface PredicateBuilder<T> {
 
-    T parse(String value);
+    T parse(Class<?> type, String value);
 
     static PredicateBuilder<?> builder(Class<?> type) {
         if (LocalDate.class.equals(type)) {
@@ -40,52 +40,54 @@ public interface PredicateBuilder<T> {
                 || long.class.equals(type)
                 || float.class.equals(type)) {
             return new NumberPredicateBuilder();
+        } else if (Enum.class.isAssignableFrom(type)) {
+            return new EnumPredicateBuilder();
         } else {
             return new DefaultPredicateBuilder();
         }
     }
 
-    default Predicate eq(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.equal(path.get(key), parse(value));
+    default Predicate eq(Class<?> type, Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
+        return criteriaBuilder.equal(path.get(key), parse(type, value));
     }
 
-    default Predicate ne(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.notEqual(path.get(key), parse(value));
+    default Predicate ne(Class<?> type, Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
+        return criteriaBuilder.notEqual(path.get(key), parse(type, value));
     }
 
-    default Predicate like(Path<?> path, String key, String value, boolean startsWith, boolean endsWith, CriteriaBuilder criteriaBuilder) {
+    default Predicate like(Class<?> type, Path<?> path, String key, String value, boolean startsWith, boolean endsWith, CriteriaBuilder criteriaBuilder) {
         String likeValue = MessageFormat.format(pattern(startsWith, endsWith).getPattern(), value);
         return criteriaBuilder.like(path.get(key), likeValue);
     }
 
-    default Predicate nlike(Path<?> path, String key, String value, boolean startsWith, boolean endsWith, CriteriaBuilder criteriaBuilder) {
+    default Predicate nlike(Class<?> type, Path<?> path, String key, String value, boolean startsWith, boolean endsWith, CriteriaBuilder criteriaBuilder) {
         String likeValue = MessageFormat.format(pattern(startsWith, endsWith).getPattern(), value);
         return criteriaBuilder.notLike(path.get(key), likeValue);
     }
 
-    default Predicate gt(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
+    default Predicate gt(Class<?> type, Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
         return criteriaBuilder.greaterThan(path.get(key), value);
     }
 
-    default Predicate ge(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
+    default Predicate ge(Class<?> type, Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
         return criteriaBuilder.greaterThanOrEqualTo(path.get(key), value);
     }
 
-    default Predicate lt(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
+    default Predicate lt(Class<?> type, Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
         return criteriaBuilder.lessThan(path.get(key), value);
     }
 
-    default Predicate le(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
+    default Predicate le(Class<?> type, Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
         return criteriaBuilder.lessThanOrEqualTo(path.get(key), value);
     }
 
-    default Predicate in(Path<?> path, String key, List<String> values, CriteriaBuilder criteriaBuilder) {
+    default Predicate in(Class<?> type, Path<?> path, String key, List<String> values, CriteriaBuilder criteriaBuilder) {
         CriteriaBuilder.In<T> in = criteriaBuilder.in(path.get(key));
-        values.stream().map(this::parse).forEach(in::value);
+        values.stream().map((String val) -> parse(type, val)).forEach(in::value);
         return in;
     }
 
-    default Predicate nin(Path<?> path, String key, List<String> values, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.not(in(path, key, values, criteriaBuilder));
+    default Predicate nin(Class<?> type, Path<?> path, String key, List<String> values, CriteriaBuilder criteriaBuilder) {
+        return criteriaBuilder.not(in(type, path, key, values, criteriaBuilder));
     }
 }

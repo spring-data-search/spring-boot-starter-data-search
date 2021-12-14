@@ -28,6 +28,9 @@ public class TestEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    // Enum
+    private TestEnum testEnum;
+
     // String
     private String testString;
     private String testStringEmail;
