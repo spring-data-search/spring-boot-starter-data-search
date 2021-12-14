@@ -8,7 +8,7 @@ import java.time.LocalTime;
 public class LocalTimePredicateBuilder implements PredicateBuilder<LocalTime> {
 
     @Override
-    public LocalTime parse(String value) {
+    public LocalTime parse(Class<?> type, String value) {
         try {
             return LocalTime.parse(value);
         } catch (Exception exception) {
@@ -17,26 +17,26 @@ public class LocalTimePredicateBuilder implements PredicateBuilder<LocalTime> {
     }
 
     @Override
-    public Predicate gt(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
-        LocalTime localTime = parse(value);
+    public Predicate gt(Class<?> type, Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
+        LocalTime localTime = parse(type, value);
         return criteriaBuilder.greaterThan(path.get(key), localTime);
     }
 
     @Override
-    public Predicate ge(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
-        LocalTime localTime = parse(value);
+    public Predicate ge(Class<?> type, Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
+        LocalTime localTime = parse(type, value);
         return criteriaBuilder.greaterThanOrEqualTo(path.get(key), localTime);
     }
 
     @Override
-    public Predicate lt(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
-        LocalTime localTime = parse(value);
+    public Predicate lt(Class<?> type, Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
+        LocalTime localTime = parse(type, value);
         return criteriaBuilder.lessThan(path.get(key), localTime);
     }
 
     @Override
-    public Predicate le(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
-        LocalTime localTime = parse(value);
+    public Predicate le(Class<?> type, Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
+        LocalTime localTime = parse(type, value);
         return criteriaBuilder.lessThanOrEqualTo(path.get(key), localTime);
     }
 }

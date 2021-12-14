@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 public class LocalDateTimePredicateBuilder implements PredicateBuilder<LocalDateTime> {
 
     @Override
-    public LocalDateTime parse(String value) {
+    public LocalDateTime parse(Class<?> type, String value) {
         try {
             return LocalDateTime.parse(value);
         } catch (Exception exception) {
@@ -17,26 +17,26 @@ public class LocalDateTimePredicateBuilder implements PredicateBuilder<LocalDate
     }
 
     @Override
-    public Predicate gt(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
-        LocalDateTime localDateTime = parse(value);
+    public Predicate gt(Class<?> type, Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
+        LocalDateTime localDateTime = parse(type, value);
         return criteriaBuilder.greaterThan(path.get(key), localDateTime);
     }
 
     @Override
-    public Predicate ge(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
-        LocalDateTime localDateTime = parse(value);
+    public Predicate ge(Class<?> type, Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
+        LocalDateTime localDateTime = parse(type, value);
         return criteriaBuilder.greaterThanOrEqualTo(path.get(key), localDateTime);
     }
 
     @Override
-    public Predicate lt(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
-        LocalDateTime localDateTime = parse(value);
+    public Predicate lt(Class<?> type, Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
+        LocalDateTime localDateTime = parse(type, value);
         return criteriaBuilder.lessThan(path.get(key), localDateTime);
     }
 
     @Override
-    public Predicate le(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
-        LocalDateTime localDateTime = parse(value);
+    public Predicate le(Class<?> type, Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
+        LocalDateTime localDateTime = parse(type, value);
         return criteriaBuilder.lessThanOrEqualTo(path.get(key), localDateTime);
     }
 }

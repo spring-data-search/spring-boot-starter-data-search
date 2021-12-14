@@ -8,31 +8,31 @@ import java.math.BigDecimal;
 public class BigDecimalPredicateBuilder implements PredicateBuilder<BigDecimal> {
 
     @Override
-    public BigDecimal parse(String value) {
+    public BigDecimal parse(Class<?> type, String value) {
         return BigDecimal.valueOf(Double.parseDouble(value));
     }
 
     @Override
-    public Predicate gt(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
-        BigDecimal bigDecimal = parse(value);
+    public Predicate gt(Class<?> type, Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
+        BigDecimal bigDecimal = parse(type, value);
         return criteriaBuilder.greaterThan(path.get(key), bigDecimal);
     }
 
     @Override
-    public Predicate ge(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
-        BigDecimal bigDecimal = parse(value);
+    public Predicate ge(Class<?> type, Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
+        BigDecimal bigDecimal = parse(type, value);
         return criteriaBuilder.greaterThanOrEqualTo(path.get(key), bigDecimal);
     }
 
     @Override
-    public Predicate lt(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
-        BigDecimal bigDecimal = parse(value);
+    public Predicate lt(Class<?> type, Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
+        BigDecimal bigDecimal = parse(type, value);
         return criteriaBuilder.lessThan(path.get(key), bigDecimal);
     }
 
     @Override
-    public Predicate le(Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
-        BigDecimal bigDecimal = parse(value);
+    public Predicate le(Class<?> type, Path<?> path, String key, String value, CriteriaBuilder criteriaBuilder) {
+        BigDecimal bigDecimal = parse(type, value);
         return criteriaBuilder.lessThanOrEqualTo(path.get(key), bigDecimal);
     }
 }

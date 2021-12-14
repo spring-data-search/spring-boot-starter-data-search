@@ -65,15 +65,15 @@ public class SpecificationImpl<T> implements Specification<T> {
             var values = Stream.of(getValues(searchCriteria.getValue()))
                     .map(this::cleanValue)
                     .collect(Collectors.toList());
-            return PredicateBuilder.builder(searchCriteria.getType()).in(searchCriteria.getPath(),
+            return PredicateBuilder.builder(searchCriteria.getType()).in(searchCriteria.getType(), searchCriteria.getPath(),
                     searchCriteria.getKey(), values, criteriaBuilder);
         } else {
             String cleanValue = cleanValue(searchCriteria.getValue());
             if (searchCriteria.isStartsWith() || searchCriteria.isEndsWith()) {
-                return PredicateBuilder.builder(searchCriteria.getType()).like(searchCriteria.getPath(),
+                return PredicateBuilder.builder(searchCriteria.getType()).like(searchCriteria.getType(), searchCriteria.getPath(),
                         searchCriteria.getKey(), cleanValue, searchCriteria.isStartsWith(), searchCriteria.isEndsWith(), criteriaBuilder);
             } else {
-                return PredicateBuilder.builder(searchCriteria.getType()).eq(searchCriteria.getPath(),
+                return PredicateBuilder.builder(searchCriteria.getType()).eq(searchCriteria.getType(), searchCriteria.getPath(),
                         searchCriteria.getKey(), cleanValue, criteriaBuilder);
             }
         }
@@ -84,15 +84,15 @@ public class SpecificationImpl<T> implements Specification<T> {
             var values = Stream.of(getValues(searchCriteria.getValue()))
                     .map(this::cleanValue)
                     .collect(Collectors.toList());
-            return PredicateBuilder.builder(searchCriteria.getType()).nin(searchCriteria.getPath(),
+            return PredicateBuilder.builder(searchCriteria.getType()).nin(searchCriteria.getType(), searchCriteria.getPath(),
                     searchCriteria.getKey(), values, criteriaBuilder);
         } else {
             String cleanValue = cleanValue(searchCriteria.getValue());
             if (searchCriteria.isStartsWith() || searchCriteria.isEndsWith()) {
-                return PredicateBuilder.builder(searchCriteria.getType()).nlike(searchCriteria.getPath(),
+                return PredicateBuilder.builder(searchCriteria.getType()).nlike(searchCriteria.getType(), searchCriteria.getPath(),
                         searchCriteria.getKey(), cleanValue, searchCriteria.isStartsWith(), searchCriteria.isEndsWith(), criteriaBuilder);
             } else {
-                return PredicateBuilder.builder(searchCriteria.getType()).ne(searchCriteria.getPath(),
+                return PredicateBuilder.builder(searchCriteria.getType()).ne(searchCriteria.getType(), searchCriteria.getPath(),
                         searchCriteria.getKey(), cleanValue, criteriaBuilder);
             }
         }
@@ -100,25 +100,25 @@ public class SpecificationImpl<T> implements Specification<T> {
 
     private Predicate gt(SearchCriteria searchCriteria, CriteriaBuilder criteriaBuilder) {
         String cleanValue = cleanValue(searchCriteria.getValue());
-        return PredicateBuilder.builder(searchCriteria.getType()).gt(searchCriteria.getPath(),
+        return PredicateBuilder.builder(searchCriteria.getType()).gt(searchCriteria.getType(), searchCriteria.getPath(),
                 searchCriteria.getKey(), cleanValue, criteriaBuilder);
     }
 
     private Predicate ge(SearchCriteria searchCriteria, CriteriaBuilder criteriaBuilder) {
         String cleanValue = cleanValue(searchCriteria.getValue());
-        return PredicateBuilder.builder(searchCriteria.getType()).ge(searchCriteria.getPath(),
+        return PredicateBuilder.builder(searchCriteria.getType()).ge(searchCriteria.getType(), searchCriteria.getPath(),
                 searchCriteria.getKey(), cleanValue, criteriaBuilder);
     }
 
     private Predicate lt(SearchCriteria searchCriteria, CriteriaBuilder criteriaBuilder) {
         String cleanValue = cleanValue(searchCriteria.getValue());
-        return PredicateBuilder.builder(searchCriteria.getType()).lt(searchCriteria.getPath(),
+        return PredicateBuilder.builder(searchCriteria.getType()).lt(searchCriteria.getType(), searchCriteria.getPath(),
                 searchCriteria.getKey(), cleanValue, criteriaBuilder);
     }
 
     private Predicate le(SearchCriteria searchCriteria, CriteriaBuilder criteriaBuilder) {
         String cleanValue = cleanValue(searchCriteria.getValue());
-        return PredicateBuilder.builder(searchCriteria.getType()).le(searchCriteria.getPath(),
+        return PredicateBuilder.builder(searchCriteria.getType()).le(searchCriteria.getType(), searchCriteria.getPath(),
                 searchCriteria.getKey(), cleanValue, criteriaBuilder);
     }
 

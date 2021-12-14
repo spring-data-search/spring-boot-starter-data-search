@@ -6,7 +6,7 @@ import java.text.ParseException;
 public class NumberPredicateBuilder implements PredicateBuilder<Number> {
 
     @Override
-    public Number parse(String value) {
+    public Number parse(Class<?> type, String value) {
         try {
             return NumberFormat.getInstance().parse(value);
         } catch (ParseException exception) {
