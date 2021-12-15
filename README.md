@@ -10,12 +10,12 @@
   <img src="https://raw.githubusercontent.com/commerce-io/spring-boot-starter-data-search/main/docs/spring-boot-starter-data-search-logo.png">
   <h3 align="center">spring-boot-starter-data-search</h3>
   <p align="center">
-    Spring-Data search API augmented with Natural Language support.
+    Spring Data Search API augmented with Natural Language support.
   </p>
   <p align="center">
     <label><i>Already supported:</i> </label><br>
-    <img src="https://img.shields.io/badge/SpringBoot-_2.1.0_and_higher-%236DB33F.svg?logo=spring-boot&logoColor=white">
-    <img src="https://img.shields.io/badge/jdk-_11_and_higher-%236DB33F.svg?logo=java&logoColor=white"><br/>
+    <img src="https://img.shields.io/badge/SpringBoot-_2.1.0_to_2.6.x-%236DB33F.svg?logo=spring-boot&logoColor=white">
+    <img src="https://img.shields.io/badge/jdk-_11_to_17-%236DB33F.svg?logo=java&logoColor=white"><br/>
     <img src="https://img.shields.io/badge/MongoDB-%236DB330.svg?logo=mongodb&logoColor=white">
     <img src="https://img.shields.io/badge/Mysql-%236DB33F.svg?logo=mysql&logoColor=white">
     <img src="https://img.shields.io/badge/MariaDB-%236DB33F.svg?logo=mariadb&logoColor=white">
@@ -23,6 +23,13 @@
     <img src="https://img.shields.io/badge/PostgreSQL-%236DB33F.svg?logo=postgresql&logoColor=white">
     <img src="https://img.shields.io/badge/DB2-%236DB33F.svg?logo=ibm&logoColor=white">
     <img src="https://img.shields.io/badge/MSSQL-%236DB33F.svg?logo=microsoft&logoColor=white">
+  </p>
+  <p align="center">
+    Data Search is compatible with 
+    <a href="https://docs.spring.io/spring-native/docs/current/reference/htmlsingle/" target="_blank" rel="noreferrer noopener">
+      Spring Native
+    </a>
+    (<a href="https://docs.spring.io/spring-native/docs/current/reference/htmlsingle/#support" target="_blank" rel="noreferrer noopener">see the list of supported drivers and limitations</a>)
   </p>
   <p align="center">
     <label><i>Coming soon:</i> </label><br>
@@ -59,6 +66,7 @@
     - [Flat Mapper](#flat-mapper)
     - [Advanced Mapper](#advanced-mapper)
   - [Value Mapping](#value-mapping)
+- [Contributors](#Contributors)
 - [License](#license)
 
 # Data Search
@@ -108,6 +116,9 @@ Data Search provides an enterprise & production ready API, prowered by Spring Bo
 ## Supported values
 #### String
 `firstName : Stan`
+#### Enum
+:new: 1.3.0
+`title : MR`
 #### Boolean
 `emailAddressVerified : true`
 #### Number (Integer, Double, Long, BigDecimal)
@@ -148,17 +159,18 @@ https://github.com/commerce-io/spring-boot-starter-data-search-mongodb-demo
 https://github.com/commerce-io/spring-boot-starter-data-search-jpa-demo
 
 ## Installation
+:arrow_right: [Get the latest releases here](https://github.com/commerce-io/spring-boot-starter-data-search/releases) :arrow_left:
 #### Data Search Mongodb starter
 **Maven**
 ```xml
 <dependency>
     <groupId>app.commerce-io</groupId>
     <artifactId>spring-boot-starter-data-search-mongodb</artifactId>
-    <version>1.2.0</version>
+    <version>1.3.0</version>
 </dependency>
 ```
 **Gradle**
-`implementation 'app.commerce-io:spring-boot-starter-data-search-mongodb:1.2.0'`
+`implementation 'app.commerce-io:spring-boot-starter-data-search-mongodb:1.3.0'`
 
 #### Data Search JPA Starter
 **Maven**
@@ -166,11 +178,11 @@ https://github.com/commerce-io/spring-boot-starter-data-search-jpa-demo
 <dependency>
     <groupId>app.commerce-io</groupId>
     <artifactId>spring-boot-starter-data-search-jpa</artifactId>
-    <version>1.2.0</version>
+    <version>1.3.0</version>
 </dependency>
 ```
 **Gradle**
-`implementation 'app.commerce-io:spring-boot-starter-data-search-jpa:1.2.0'`
+`implementation 'app.commerce-io:spring-boot-starter-data-search-jpa:1.3.0'`
 
 ## Configuration
 Data Search provides a custom repository. In order to use the provided repository, add the following annotation to the main class or any other
@@ -258,9 +270,10 @@ Page<CustomerEntity> page = customerRepository.findAll(search, pageable, mapper)
 ```
 
 ## Value Mapping
-In addition to the fields mapping, some values could be converted before returning the search result, like returning labels instead of codes in some scenarios.
+:new: 1.2.0
 
-We recently (in the 1.2.0) added the value mapping feature to Spring Data Search, to be used as follows:
+In addition to the fields mapping, some values could be converted before returning the search result.
+Data Search supports values mapping:
 
 ```java
 public class LowerCaseValueMapping implements ValueMapping {
@@ -281,12 +294,29 @@ Mapper addressMapper = Mapper.flatMapper()
 Page<CustomerEntity> page = customerRepository.findAll(search, pageable, addressMapper);
 ```
 
+# Contributors
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-blue.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
+
+Thanks to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+
 # License
 
 This software is released under the Apache license. See `LICENSE` for more information.
 
 [![license](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://github.com/commerce-io/spring-boot-starter-data-search/blob/main/LICENSE.txt)
-
 
 [license-shield]: https://img.shields.io/badge/License-Apache_2.0-blue.svg
 
