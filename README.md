@@ -309,7 +309,7 @@ Thanks to these wonderful people ([emoji key](https://allcontributors.org/docs/e
 <!-- markdownlint-disable -->
 <table>
   <tr>
-    <td align="center"><a href="https://github.com/adlmez"><img src="https://avatars.githubusercontent.com/u/28732941?v=4?s=100" width="100px;" alt=""/><br /><sub><b>@adlmez</b></sub></a><br /><a href="https://github.com/commerce-io/spring-boot-starter-data-search/commits?author=adlmez" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/adlmez"><img src="https://avatars.githubusercontent.com/u/28732941?v=4?s=100" width="100px;" alt=""/><br /><sub><b>@adlmez</b></sub></a><br /><a href="https://github.com/commerce-io/spring-boot-starter-data-search/commits?author=adlmez" title="Code">💻</a> <a href="#ideas-adlmez" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/commerce-io/spring-boot-starter-data-search/pulls?q=is%3Apr+reviewed-by%3Aadlmez" title="Reviewed Pull Requests">👀</a> <a href="#example-adlmez" title="Examples">💡</a></td>
   </tr>
 </table>
 
