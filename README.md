@@ -299,7 +299,7 @@ Page<CustomerEntity> page = customerRepository.findAll(search, pageable, address
 
 # Contributors
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-2-blue.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-blue.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 Thanks to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
@@ -321,10 +321,10 @@ Thanks to these wonderful people ([emoji key](https://allcontributors.org/docs/e
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
 
 # License
+[![license](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://github.com/commerce-io/spring-boot-starter-data-search/blob/main/LICENSE.txt)
 
 This software is released under the Apache license. See `LICENSE` for more information.
 
-[![license](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://github.com/commerce-io/spring-boot-starter-data-search/blob/main/LICENSE.txt)
 
 [license-shield]: https://img.shields.io/badge/License-Apache_2.0-blue.svg
 
