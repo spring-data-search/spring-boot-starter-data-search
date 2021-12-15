@@ -296,7 +296,7 @@ Page<CustomerEntity> page = customerRepository.findAll(search, pageable, address
 
 # Contributors
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-3-blue.svg?style=flat-square)](#contributors)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 Thanks to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
@@ -306,7 +306,7 @@ Thanks to these wonderful people ([emoji key](https://allcontributors.org/docs/e
 <!-- markdownlint-disable -->
 <table>
   <tr>
-    <td align="center"><a href="https://github.com/adlmez"><img src="https://avatars.githubusercontent.com/u/28732941?v=4?s=100" width="100px;" alt=""/><br /><sub><b>@adlmez</b></sub></a><br /><a href="https://github.com/commerce-io/spring-boot-starter-data-search/commits?author=adlmez" title="Code">💻</a> <a href="#ideas-adlmez" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/commerce-io/spring-boot-starter-data-search/pulls?q=is%3Apr+reviewed-by%3Aadlmez" title="Reviewed Pull Requests">👀</a> <a href="#example-adlmez" title="Examples">💡</a></td>
+    <td align="center"><a href="https://github.com/adlmez"><img src="https://avatars.githubusercontent.com/u/28732941?v=4?s=100" width="100px;" alt=""/><br /><sub><b>@adlmez</b></sub></a><br /><a href="https://github.com/commerce-io/spring-boot-starter-data-search/commits?author=adlmez" title="Code">💻</a> <a href="#ideas-adlmez" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/commerce-io/spring-boot-starter-data-search/pulls?q=is%3Apr+reviewed-by%3Aadlmez" title="Reviewed Pull Requests">👀</a> <a href="#example-adlmez" title="Examples">💡</a> <a href="https://github.com/commerce-io/spring-boot-starter-data-search/commits?author=adlmez" title="Tests">⚠️</a></td>
     <td align="center"><a href="https://github.com/features/security"><img src="https://avatars.githubusercontent.com/u/27347476?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Dependabot</b></sub></a><br /><a href="#infra-dependabot" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
     <td align="center"><a href="https://allcontributors.org"><img src="https://avatars.githubusercontent.com/u/46410174?v=4?s=100" width="100px;" alt=""/><br /><sub><b>All Contributors</b></sub></a><br /><a href="#infra-all-contributors" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
   </tr>
