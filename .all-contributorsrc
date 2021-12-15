@@ -1,0 +1,24 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "adlmez",
+      "name": "@adlmez",
+      "avatar_url": "https://avatars.githubusercontent.com/u/28732941?v=4",
+      "profile": "https://github.com/adlmez",
+      "contributions": [
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "spring-boot-starter-data-search",
+  "projectOwner": "commerce-io",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}
