@@ -117,7 +117,6 @@ Data Search provides an enterprise & production ready API, prowered by Spring Bo
 #### String
 `firstName : Stan`
 #### Enum
-:new: 1.3.0
 `title : MR`
 #### Boolean
 `emailAddressVerified : true`
@@ -270,7 +269,6 @@ Page<CustomerEntity> page = customerRepository.findAll(search, pageable, mapper)
 ```
 
 ## Value Mapping
-:new: 1.2.0
 
 In addition to the fields mapping, some values could be converted before returning the search result.
 Data Search supports values mapping:
