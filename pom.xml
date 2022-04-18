@@ -44,7 +44,7 @@
         <java.version>11</java.version>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.source>${java.version}</maven.compiler.source>
-        <antlr4-runtime.version>4.9.3</antlr4-runtime.version>
+        <antlr4-runtime.version>4.10.1</antlr4-runtime.version>
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
         <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
